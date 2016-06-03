@@ -1,9 +1,3 @@
-/*
-    Blurはアニメーションすると重そうだからやらない
-    ・・・けどやっぱしっくりこない
-    CSSからAnimationで書けばいいんじゃね！？
-*/
-
 // Modules
 import makeElement from 'make-element';
 import is from '@honeo/type-check';
@@ -146,7 +140,7 @@ const getContainer = do{
 */
 EasyModalWindow.open = function(item){
     if( !is.element(item) ){
-        throw new TypeError(`${name}: invalid argument`);
+        throw new TypeError(`invalid argument`);
     }
 
     const container = getContainer();
@@ -190,7 +184,6 @@ EasyModalWindow.open = function(item){
         自身を返す
 */
 EasyModalWindow.close = function(){
-    console.log('close', `isOpen: ${isOpen}`);
     if( isOpen ){
         const container = getContainer();
         const item = container.firstChild;

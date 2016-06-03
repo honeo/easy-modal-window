@@ -1,6 +1,6 @@
 {
   "name": "easy-modal-window",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "かんたんモーダルウィンドウ",
   "main": "index.js",
   "scripts": {
