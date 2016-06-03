@@ -1,0 +1,42 @@
+{
+  "name": "easy-modal-window",
+  "version": "1.0.0",
+  "description": "かんたんモーダルウィンドウ",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "author": "honeo",
+  "license": "MIT",
+  "dependencies": {
+    "@honeo/type-check": "^1.4.0",
+    "make-element": "^1.1.1",
+    "style-handle": "^1.1.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-core": "^6.9.1",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "opener": "^1.4.1",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/honeo/easy-modal-window.git"
+  },
+  "keywords": [
+    "easy",
+    "modal",
+    "window"
+  ],
+  "bugs": {
+    "url": "https://github.com/honeo/easy-modal-window/issues"
+  },
+  "homepage": "https://github.com/honeo/easy-modal-window#readme"
+}
