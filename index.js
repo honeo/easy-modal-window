@@ -4,7 +4,6 @@ import is from '@honeo/type-check';
 import StyleHandle from 'style-handle';
 
 // Var
-const name = 'modal-window';
 const doc = document,
     head = doc.head,
     body = doc.body;
