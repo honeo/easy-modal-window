@@ -24,7 +24,8 @@ const config = {
 			query: {
 				ignore: [
 					'babel-polyfill',
-					'core-js'				],
+					'core-js'
+				],
 				presets: [
 					"babel-preset-es2015",
 					"babel-preset-stage-0"

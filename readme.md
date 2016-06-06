@@ -3,7 +3,7 @@
 [easy-modal-window](https://www.npmjs.com/package/easy-modal-window)
 
 ## なにこれ
-かんたんモーダルウィンドウ。
+Flexbox実装のかんたんモーダルウィンドウ。
 
 ## 使い方
 ```sh
@@ -30,3 +30,10 @@ ModalWindow.open(element);
 引数の要素を中心にモーダルウィンドウを展開する。  
 既に展開されていれば閉じる。  
 自身を返す。
+
+## Legacy
+アニメーションなしの軽量版。  
+div要素でラップしてtransformで中央寄せする。
+```js
+import ModalWindow from 'easy-modal-window-legacy';
+```
