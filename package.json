@@ -1,6 +1,6 @@
 {
   "name": "easy-modal-window",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "かんたんモーダルウィンドウ",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "honeo",
   "license": "MIT",
   "dependencies": {
-    "@honeo/type-check": "^1.4.0",
+    "@honeo/type-check": "^2.0.0",
     "make-element": "^1.1.1",
     "style-handle": "^1.1.0"
   },

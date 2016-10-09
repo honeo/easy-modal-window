@@ -1,6 +1,6 @@
 // Modules
 import makeElement from 'make-element';
-import is from '@honeo/type-check';
+import {is, not} from '@honeo/type-check';
 import StyleHandle from 'style-handle';
 
 // Var
@@ -138,7 +138,7 @@ const getContainer = do{
         コンテナとアイテムのフェードをeasingでズラすと目に悪い
 */
 EasyModalWindow.open = function(item){
-    if( !is.element(item) ){
+    if( not.element(item) ){
         throw new TypeError(`invalid argument`);
     }
 

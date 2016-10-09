@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import makeElement from 'make-element';
-//import ModalWindow from '../';
-import ModalWindow from '../legacy';
+import ModalWindow from '../';
+//import ModalWindow from '../legacy';
 
 // 各サイズ
 const attributeObjectArr = [{
