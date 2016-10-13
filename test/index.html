@@ -2,10 +2,31 @@
 <html>
 <head>
     <style type="text/css">
+        body {
+            height: 200vh;
+        }
+
+        #menu {
+            position: fixed;
+            border: 1px solid;
+        }
+
+        #hoge {
+            position: absolute;
+            bottom: 0%;
+        }
+
+        #fuga {
+            position: absolute;
+            bottom: -100%;
+        }
     </style>
     <title>modal-window</title>
 </head>
 <body>
+    <div id="menu"></div>
+    <div id="hoge">☆(ゝω･)vｷｬﾋﾟ</div>
+    <div id="fuga">☆(ゝω･)vﾜｵｰ</div>
     <script src="bundle_index.js" defer></script>
     <script src="http://localhost:8080/webpack-dev-server.js" defer></script>
 </body>

@@ -13,7 +13,14 @@ let isOpen = false; // 展開の状態
 /*
     APIの入れ物
 */
-const EasyModalWindow = {}
+const EasyModalWindow = {
+    get isOpen(){
+        return isOpen;
+    },
+    open,
+    close,
+    toggle
+}
 
 /*
     本体要素・コンテナを返す
@@ -43,7 +50,7 @@ const getContainer = do{
             });
             // 背景クリックで閉じる
             container.addEventListener('click', (e)=>{
-                e.target===container && EasyModalWindow.close();
+                e.target===container && close();
             }, false);
 
             // 子要素用のセンタリング
@@ -78,50 +85,85 @@ const getContainer = do{
 /*
     引数要素でモーダルウィンドウを開く
         既に開いていれば中身の要素を入れ替える
-        自身を返す
+        promiseを返す
 */
-EasyModalWindow.open = function(item){
+function open(item){
     if( not.element(item) ){
         throw new TypeError(`invalid argument`);
     }
-
-    const [container, wrapper] = getContainer();
     if( isOpen ){
-        wrapper.firstChild.remove();
-        wrapper.appendChild(item);
-    }else{
-        body.appendChild(container);
-        wrapper.appendChild(item);
-        isOpen = true;
+        return replace(item);
     }
 
-    return this;
+    const [container, wrapper] = getContainer();
+    body.appendChild(container);
+    wrapper.appendChild(item);
+    isOpen = true;
+    onOpen({
+        target: item,
+        timeStamp: Date.now(),
+        type: 'open'
+    });
+    return Promise.resolve();
+}
+
+/*
+    中身をさくっと入れ替える
+*/
+function replace(item){
+    const [container, wrapper] = getContainer();
+    wrapper.firstChild.remove();
+    wrapper.appendChild(item);
+    onReplace({
+        target: item,
+        timeStamp: Date.now(),
+        type: 'replace'
+    });
+    return Promise.resolve();
 }
 
 /*
     展開中なら閉じる
-        自身を返す
+        promiseを返す
 */
-EasyModalWindow.close = function(){
+function close(){
     if( isOpen ){
         const [container, wrapper] = getContainer();
         const item = wrapper.firstChild;
-
         container.remove();
         item.remove();
         isOpen = false;
+        onClose({
+            target: null,
+            timeStamp: Date.now(),
+            type: 'close'
+        });
     }
-    return this;
+    return Promise.resolve();
 }
 
 /*
     トグル
         自身を返す
 */
-EasyModalWindow.toggle = function(element){
+function toggle(element){
     return isOpen ?
-        this.close():
-        this.open(element);
+        close():
+        open(element);
+}
+
+/*
+    簡易イベント実装
+    モジュールオブジェクトにlistenerがあれば実行する
+*/
+function onOpen(e){
+    is.func(EasyModalWindow.onopen) && EasyModalWindow.onopen(e);
+}
+function onReplace(e){
+    is.func(EasyModalWindow.onreplace) && EasyModalWindow.onreplace(e);
+}
+function onClose(e){
+    is.func(EasyModalWindow.onclose) && EasyModalWindow.onclose(e);
 }
 
 export default EasyModalWindow;

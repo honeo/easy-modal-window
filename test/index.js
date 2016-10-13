@@ -1,7 +1,13 @@
+// Modules
 import 'babel-polyfill';
 import makeElement from 'make-element';
+import AwaitEvent from '@honeo/await-event';
+import {is, not} from '@honeo/type-check';
 import ModalWindow from '../';
-//import ModalWindow from '../legacy';
+// import ModalWindow from '../legacy';
+
+// Var
+const div_menu = document.getElementById('menu');
 
 // 各サイズ
 const attributeObjectArr = [{
@@ -35,30 +41,42 @@ attributeObjectArr.forEach( ({style, value})=>{
 	button.addEventListener('click', (e)=>{
 		ModalWindow.open(element);
 	});
-	document.body.appendChild(button);
+	div_menu.appendChild(button);
 });
 
 
-// 入れ替え
-const button = makeElement('input', {
+// 入れ替えテスト
+const button_replace = makeElement('input', {
 	value: 'replace',
 	type: 'button'
 });
-const button_replace = makeElement('input', {
-	value: 'next',
-	type: 'button'
-});
-const button_close = makeElement('input', {
-	value: 'close',
-	type: 'button'
-});
-button.addEventListener('click', (e)=>{
-	ModalWindow.open(button_replace);
-}, false);
+const block_style = attributeObjectArr[0].style + 'border: dashed 2px white;' + 'overflow: auto;';
+const blockA = makeElement('div', {style: block_style}, 'next');
+const blockB = makeElement('div', {style: block_style}, 'close');
+
 button_replace.addEventListener('click', (e)=>{
-	ModalWindow.open(button_close);
+	ModalWindow.toggle(blockA).then( _=>{
+		return AwaitEvent(blockA, 'click', false);
+	}).then( _=>{
+		return ModalWindow.open(blockB);
+	}).then( _=>{
+		return AwaitEvent(blockB, 'click', false);
+	}).then( _=>{
+		return ModalWindow.close();
+	}).catch( (error)=>{
+		throw error;
+	});
 }, false);
-button_close.addEventListener('click', (e)=>{
-	ModalWindow.close();
-}, false);
-document.body.appendChild(button);
+
+div_menu.appendChild(button_replace);
+
+// Events
+ModalWindow.onopen = (e)=>{
+	console.log('onopen', e);
+}
+ModalWindow.onreplace = (e)=>{
+	console.log('onreplace', e);
+}
+ModalWindow.onclose = (e)=>{
+	console.log('onclose', e);
+}
