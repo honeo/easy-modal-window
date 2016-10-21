@@ -71,7 +71,7 @@ button_replace.addEventListener('click', (e)=>{
 
 div_menu.appendChild(button_replace);
 
-// 閉じる操作テスト
+// 閉じる操作
 const button_closeModeChange = makeElement('input', {
 	type: 'button',
 	value: `背景クリックで閉じる: ${ModalWindow.isCloseOnBackgroundClick}`
@@ -81,6 +81,17 @@ button_closeModeChange.addEventListener('click', function(e){
 	this.value = `背景クリックで閉じる: ${ModalWindow.isCloseOnBackgroundClick}`;
 }, false);
 div_menu.appendChild(button_closeModeChange);
+
+// BlurON/OFFテスト
+const button_blurSwitch = makeElement('input', {
+	type: 'button',
+	value: `blur: ${ModalWindow.isBackgroundBlur}`
+});
+button_blurSwitch.addEventListener('click', function(e){
+	ModalWindow.isBackgroundBlur = !ModalWindow.isBackgroundBlur;
+	this.value = `blur: ${ModalWindow.isBackgroundBlur}`;
+}, false);
+div_menu.appendChild(button_blurSwitch);
 
 // Events
 ModalWindow.onopen = (e)=>{

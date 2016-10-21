@@ -35,6 +35,35 @@ const body = doc.body;
 const duration_ms = 160; //アニメーション総時間
 let isOpen = false; // 展開の状態、同期処理内で早めに切り替える、Promise#resolveのタイミングとは関係ない
 let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
+let isBackgroundBlur = true; // 展開中に背景をボカすか
+
+/*
+    APIの入れ物
+*/
+const EasyModalWindow = {
+    get isOpen(){
+        return isOpen;
+    },
+    get isBackgroundBlur(){
+        return isBackgroundBlur;
+    },
+    set isBackgroundBlur(arg){
+        if( is.bool(arg) ){
+            isBackgroundBlur = arg;
+        }
+    },
+    get isCloseOnBackgroundClick(){
+        return isCloseOnBackgroundClick;
+    },
+    set isCloseOnBackgroundClick(arg){
+        if( is.bool(arg) ){
+            isCloseOnBackgroundClick = arg;
+        }
+    },
+    open,
+    close,
+    toggle
+}
 
 /*
     各要素の入れ物
@@ -139,25 +168,7 @@ const obj = {
     }
 }
 
-/*
-    APIの入れ物
-*/
-const EasyModalWindow = {
-    get isOpen(){
-        return isOpen;
-    },
-    get isCloseOnBackgroundClick(){
-        return isCloseOnBackgroundClick;
-    },
-    set isCloseOnBackgroundClick(arg){
-        if( is.bool(arg) ){
-            isCloseOnBackgroundClick = arg;
-        }
-    },
-    open,
-    close,
-    toggle
-}
+
 
 obj.containerElement.append( obj.space_top );
 obj.containerElement.append( obj.centeringElement );
@@ -217,7 +228,8 @@ function open(item){
             fill: 'forwards'
         });
 
-        bodyCtrl.blur({selector: `.${container.className}`}); // モーダル以外をボカす
+        isBackgroundBlur && bodyCtrl.blur({selector: `.${container.className}`}); // モーダル以外をボカす
+
 
         // アニメーション終了時にresolve、無名関数を挟んでeventを渡さない
         container_apObj.onfinish = (e)=>{

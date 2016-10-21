@@ -31,12 +31,16 @@ const promise = ModalWindow.open(element);
 既に展開されていれば閉じる。  
 展開後・または閉じた後にresolveするpromiseを返す。
 
+### .isBackgroundBlur
+モーダルウィンドウの展開中に背景をボカすか。  
+標準はtrue.
+
 ### .isOpen
-展開中かどうかのBoolean.
+モーダルウィンドウが展開中ならtrueを、そうでなければfalseが入る。
 読取専用。
 
 ### .isCloseOnBackgroundClick
-✖ボタン以外にも背景クリックでモーダルウィンドウを閉じるかのBoolean.  
+✖ボタン以外にも背景クリックでモーダルウィンドウを閉じるか。  
 標準はtrue.
 
 ### Events
