@@ -1,13 +1,31 @@
 /*
-    easyじゃなくなってきたらeasy-を外したい
-        isRunning変数で展開・閉じる処理中の利用は破棄しようかと思ったが
-        即やっぱやめ出来ないと操作のストレスになりそうだからやめた
+    要件
+        アニメーション
+            展開・閉じる際の背景色。
+            展開中に後ろの各要素のボカシ。
+            展開・閉じる際の挿入した要素の透明度。
+        中央寄せ
+            flexbox実装。
+            中身のサイズに合わせてページサイズ（スクロール領域）が変化する。
+            中央寄せで上下左右が画面外にはみ出さない。
+            外から挿入した要素の外部にレスポンシブなスペースがある。
+                上部には閉じるボタンがあり、最低限そのサイズ分のスペースは保持する。
+        閉じるボタン
+            windowより挿入要素が大きいと背景クリックで閉じられなくなり
+            挿入要素内で .close() を呼び出していなかった場合はハマるため。
+    TODO:
+        easyじゃなくなってきたからeasy-を外したい。
+        画面右上に☓ボタン。
+        複数要素の挿入。
+        Mobileだと✖ボタンの右下にスペースがない
 */
 
 // Modules
 import AwaitEvent from '@honeo/await-event';
 import makeElement from 'make-element';
 import {is, not} from '@honeo/type-check';
+import {onOpen, onReplace, onClose} from './lib/events.js';
+import bodyCtrl from './lib/body-ctrl.js';
 import StyleHandle from 'style-handle';
 
 // Var
@@ -15,82 +33,111 @@ const doc = document;
 const head = doc.head;
 const body = doc.body;
 const duration_ms = 160; //アニメーション総時間
-const blur_value = '1px'; //blur()の値
 let isOpen = false; // 展開の状態、同期処理内で早めに切り替える、Promise#resolveのタイミングとは関係ない
-
-// 試験的、表示中にbodyのサイズを変更
-const css_body = `
-    body {
-        height: 100vm;
-        overflow: hidden;
-    }
-`;
+let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
 
 /*
-    一括版
-        少し遅らせて背景(モーダル以外のbody子要素)をボカす
-        WebAnimationAPIでは一括指定ができない
+    各要素の入れ物
+        なければ作って返す
+    構造
+        containerElement: Container
+            space_top: Item
+            centeringElement: Item
+                Contents
+            space_bottom: Item
 */
-const css_animation = `
-    body > *:not(.easy-modal-window) {
-        -webkit-animation-name: hoge;
-        -moz-animation-name: hoge;
-        -o-animation-name: hoge;
-        animation-name: hoge;
-        -webkit-animation-duration: ${duration_ms}ms;
-        -moz-animation-duration: ${duration_ms}ms;
-        -o-animation-duration: ${duration_ms}ms;
-        animation-duration: ${duration_ms}ms;
-        -webkit-animation-fill-mode: forwards;
-        -moz-animation-fill-mode: forwards;
-        -o-animation-fill-mode: forwards;
-        -webkit-animation-fill-mode: forwards;
-        -moz-animation-fill-mode: forwards;
-        -o-animation-fill-mode: forwards;
-        animation-fill-mode: forwards;
-        -webkit-animation-timing-function: ease-in;
-        -moz-animation-timing-function: ease-in;
-        -o-animation-timing-function: ease-in;
-        animation-timing-function: ease-in;
-    }
+const obj = {
+    // 上部スペースと✕ボタン
+    get space_top(){
+        if( !this._space_top ){
+            // 親
+            const div = makeElement('div', {style: `
+                min-height: 2.2rem;
+                flex-grow: 50;
+                flex-shrink: 0;
+                text-align: right;
+                cursor: default;
+                user-select: none;
+            `});
+            // 子、ボタン代わり
+            const div_closeButton = makeElement('div', '✕', {
+                class: 'easy-modal-window-closeButton'
+            });
+            StyleHandle.addText(`
+                .easy-modal-window-closeButton{
+                    position: absolute;
+                    right: 0;
+                    padding: 0.3rem;
+                    color: white;
+                    font-size: 1.6rem;
+                    user-select: none;
+                    transition: 0.3s;
+                }
+                .easy-modal-window-closeButton:hover{
+                    color: firebrick;
+                    transition: 0.3s;
+                }
+            `);
+            div_closeButton.onclick = close;
+            div.appendChild(div_closeButton);
+            this._space_top = div;
+        }
+        return this._space_top;
+    },
 
-    @-webkit-keyframes hoge {
-        from {
-            -webkit-filter: blur(0px);
-                    filter: blur(0px);
-        } to {
-            -webkit-filter: blur(${blur_value});
-                    filter: blur(${blur_value});
+    // 下部スペース
+    get space_bottom(){
+        if( !this._space_bottom ){
+            // 親
+            const div = makeElement('div', {style: `
+                flex-grow: 50;
+            `});
+            this._space_bottom = div;
         }
+        return this._space_bottom;
+    },
+
+    // 背景＆flexboxコンテナ
+    get containerElement(){
+        if( !this._containerElement ){
+            const div = makeElement('div', {
+                class: `easy-modal-window-${Date.now()}`,
+                style: `
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-shrink: 0;
+                    position: fixed;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    overflow: auto;
+                    z-index: 1000;
+            `});
+            this._containerElement = div;
+        }
+        return this._containerElement;
+    },
+
+    // flexboxアイテム、中央寄せ用
+    get centeringElement(){
+        if( !this._centeringElement ){
+            const div = makeElement('div', {
+                style: `
+                    max-width: 100%;
+                    /* max-height: 100%; */
+                    flex-shrink: 0;
+            `});
+            this._centeringElement = div;
+        }
+        return this._centeringElement;
     }
-    @-moz-keyframes hoge {
-            from {
-                -webkit-filter: blur(0px);
-                        filter: blur(0px);
-            } to {
-                -webkit-filter: blur(${blur_value});
-                        filter: blur(${blur_value});
-            }
-        }
-    @-o-keyframes hoge {
-            from {
-                -webkit-filter: blur(0px);
-                        filter: blur(0px);
-            } to {
-                -webkit-filter: blur(${blur_value});
-                        filter: blur(${blur_value});
-            }
-        }
-    @keyframes hoge {
-        from {
-            -webkit-filter: blur(0px);
-                    filter: blur(0px);
-        } to {
-            -webkit-filter: blur(${blur_value});
-                    filter: blur(${blur_value});
-        }
-    }
-`;
+}
 
 /*
     APIの入れ物
@@ -99,57 +146,29 @@ const EasyModalWindow = {
     get isOpen(){
         return isOpen;
     },
+    get isCloseOnBackgroundClick(){
+        return isCloseOnBackgroundClick;
+    },
+    set isCloseOnBackgroundClick(arg){
+        if( is.bool(arg) ){
+            isCloseOnBackgroundClick = arg;
+        }
+    },
     open,
     close,
     toggle
 }
 
-/*
-    本体要素・flexboxコンテナを返す
-        初回呼び出しで作成、以降はキャッシュを返す
-*/
-const getContainer = do{
-    let container;
-    (function(){
-        if( !container ){
-            container = makeElement('div', {
-                class: 'easy-modal-window',
-                style:
-                    `margin: 0;
-                    padding: 0;
-                    -webkit-box-sizing: border-box;
-                    -moz-box-sizing: border-box;
-                    box-sizing: border-box;
-                    display: -webkit-box;
-                    display: -webkit-flex;
-                    display: -moz-box;
-                    display: -ms-flexbox;
-                    display: flex;
-                    -webkit-box-pack: center;
-                    -webkit-justify-content: center;
-                    -moz-box-pack: center;
-                    -ms-flex-pack: center;
-                    justify-content: center;
-                    -webkit-box-align: center;
-                    -webkit-align-items: center;
-                    -moz-box-align: center;
-                    -ms-flex-align: center;
-                    align-items: center;
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;`
-            });
-            // 背景クリックで閉じる
-            container.addEventListener('click', (e)=>{
-                e.target===container && close();
-            }, false);
-        }
-        return container;
-    });
-}
+obj.containerElement.append( obj.space_top );
+obj.containerElement.append( obj.centeringElement );
+obj.containerElement.append( obj.space_bottom );
 
+// 設定有効時、背景(container or centering)クリックで閉じる
+obj.containerElement.addEventListener('click', (e)=>{
+    if(isCloseOnBackgroundClick && e.target===obj.containerElement){
+         close();
+    }
+}, false);
 
 
 
@@ -171,12 +190,12 @@ function open(item){
 
     return new Promise( (resolve, reject)=>{
 
-        const container = getContainer();
+        const {containerElement: container, centeringElement: centering} = obj;
         body.appendChild(container);
-        container.appendChild(item);
+        centering.appendChild(item);
 
-        // 試験的、body要素をheight100%に縮小して非表示部分を隠す
-        StyleHandle.addText(css_body);
+        // body要素をheight100%に縮小して非表示部分を隠す
+        bodyCtrl.hidden();
 
         // モーダルウィンドウをフェードイン
         const container_apObj = container.animate([{
@@ -198,13 +217,12 @@ function open(item){
             fill: 'forwards'
         });
 
-        // モーダル以外をボカす
-        StyleHandle.addText(css_animation);
+        bodyCtrl.blur({selector: `.${container.className}`}); // モーダル以外をボカす
 
         // アニメーション終了時にresolve、無名関数を挟んでeventを渡さない
         container_apObj.onfinish = (e)=>{
             resolve();
-            onOpen({
+            EasyModalWindow::onOpen({
                 target: item,
                 timeStamp: Date.now(),
                 type: 'open'
@@ -223,8 +241,8 @@ function open(item){
             引数チェックはopenでやったから省略
 */
 function replace(item_new){
-    const container = getContainer();
-    const item_old = container.firstChild;
+    const {containerElement: container, centeringElement: centering} = obj;
+    const item_old = centering.firstChild;
     return new Promise( (resolve, reject)=>{
         // 古いアイテムをフェードアウト
         const apObj_old = item_old.animate([{
@@ -239,7 +257,7 @@ function replace(item_new){
         // フェードアウト後にパージ
         item_old.remove();
         // 新アイテムを挿入してフェードイン
-        container.appendChild(item_new);
+        centering.appendChild(item_new);
         const item_apObj = item_new.animate([{
             opacity: 0,
         }, {
@@ -250,7 +268,7 @@ function replace(item_new){
         });
         return AwaitEvent(item_apObj, 'finish', false);
     }).then( (e)=>{
-        onReplace({
+        EasyModalWindow::onReplace({
             target: item_new,
             timeStamp: Date.now(),
             type: 'replace'
@@ -266,7 +284,7 @@ function replace(item_new){
 */
 function close(){
     if( !isOpen ){
-        onClose({
+        EasyModalWindow::onClose({
             target: null,
             timeStamp: Date.now(),
             type: 'close'
@@ -274,8 +292,8 @@ function close(){
         return Promise.resolve();
     }
 
-    const container = getContainer();
-    const item = container.firstChild;
+    const {containerElement: container, centeringElement: centering} = obj;
+    const item = centering.firstChild;
     // コンテナをフェードアウト
     const container_apObj = container.animate([{
         background: 'rgba(0,0,0, 0.7)',
@@ -298,21 +316,19 @@ function close(){
     });
     const item_promise = AwaitEvent(item_apObj, 'finish', false);
 
-    // 試験的、body要素への変更を解除
-    StyleHandle.removeText(css_body);
-
-    // ボカし解除
-    StyleHandle.removeText(css_animation);
+    bodyCtrl.focus(); // ボカし解除
     isOpen = false;
 
-    // 両フェードが終われば両要素をパージしてresolve
+    // 両フェードが終われば両要素をパージしてwindowサイズを戻してresolve
     return Promise.all([
         container_promise,
         item_promise
     ]).then( (evtArr)=>{
         container.remove();
         item.remove();
-        onClose({
+        bodyCtrl.view(); // windowサイズ復元
+        // closeイベント
+        EasyModalWindow::onClose({
             target: item,
             timeStamp: Date.now(),
             type: 'close'
@@ -328,20 +344,6 @@ function toggle(element){
     return isOpen ?
         close():
         open(element);
-}
-
-/*
-    簡易イベント実装
-    モジュールオブジェクトにlistenerがあれば実行する
-*/
-function onOpen(e){
-    is.func(EasyModalWindow.onopen) && EasyModalWindow.onopen(e);
-}
-function onReplace(e){
-    is.func(EasyModalWindow.onreplace) && EasyModalWindow.onreplace(e);
-}
-function onClose(e){
-    is.func(EasyModalWindow.onclose) && EasyModalWindow.onclose(e);
 }
 
 export default EasyModalWindow;

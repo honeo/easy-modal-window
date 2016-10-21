@@ -1,10 +1,11 @@
 // Modules
 import 'babel-polyfill';
+import '../../../my-polyfill';
 import makeElement from 'make-element';
 import AwaitEvent from '@honeo/await-event';
 import {is, not} from '@honeo/type-check';
 import ModalWindow from '../';
-// import ModalWindow from '../legacy';
+//import ModalWindow from '../legacy';
 
 // Var
 const div_menu = document.getElementById('menu');
@@ -69,6 +70,17 @@ button_replace.addEventListener('click', (e)=>{
 }, false);
 
 div_menu.appendChild(button_replace);
+
+// 閉じる操作テスト
+const button_closeModeChange = makeElement('input', {
+	type: 'button',
+	value: `背景クリックで閉じる: ${ModalWindow.isCloseOnBackgroundClick}`
+});
+button_closeModeChange.addEventListener('click', function(e){
+	ModalWindow.isCloseOnBackgroundClick = !ModalWindow.isCloseOnBackgroundClick;
+	this.value = `背景クリックで閉じる: ${ModalWindow.isCloseOnBackgroundClick}`;
+}, false);
+div_menu.appendChild(button_closeModeChange);
 
 // Events
 ModalWindow.onopen = (e)=>{

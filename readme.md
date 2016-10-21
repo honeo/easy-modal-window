@@ -32,7 +32,12 @@ const promise = ModalWindow.open(element);
 展開後・または閉じた後にresolveするpromiseを返す。
 
 ### .isOpen
-展開中ならtrue、違えばfalseを返す。
+展開中かどうかのBoolean.
+読取専用。
+
+### .isCloseOnBackgroundClick
+✖ボタン以外にも背景クリックでモーダルウィンドウを閉じるかのBoolean.  
+標準はtrue.
 
 ### Events
 onopen, onreplace, onclose
@@ -40,10 +45,4 @@ onopen, onreplace, onclose
 ModalWindow.onopen = (e)=>{
 	console.log(e); // {target: element, timeStamp: number, type:"open"}
 }
-```
-
-## Legacy
-flexbox未使用、アニメーションなしの軽量版。
-```js
-import ModalWindow from 'easy-modal-window/legacy';
 ```

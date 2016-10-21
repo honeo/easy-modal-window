@@ -4,7 +4,12 @@ console.log('modal-window: test');
 const webpack = require('webpack');
 const webpackDevServer = require('webpack-dev-server');
 const opener = require('opener');
+const Path = require('path');
 
+/*
+	require.resolve()を使っているのは上位ディレクトリを跨いだmy-polyfillへの解決用。
+	resolveLoaderだとbabel-loaderはいいが、babel自身の呼ぶbabel-presetは解決できない。
+*/
 const config = {
 	entry: {
 		app: [
@@ -20,15 +25,16 @@ const config = {
 	module: {
 		loaders: [{
 			test: /\.js$/,
-			loader: 'babel-loader',
+			loader: require.resolve("babel-loader"),
 			query: {
 				ignore: [
 					'babel-polyfill',
+					'my-polyfill',
 					'core-js'
 				],
 				presets: [
-					"babel-preset-es2015",
-					"babel-preset-stage-0"
+				  	require.resolve("babel-preset-latest"),
+				  	require.resolve("babel-preset-stage-0")
 				]
 			}
 		}],
