@@ -14,10 +14,10 @@
             windowより挿入要素が大きいと背景クリックで閉じられなくなり
             挿入要素内で .close() を呼び出していなかった場合はハマるため。
     TODO:
-        easyじゃなくなってきたからeasy-を外したい。
-        画面右上に☓ボタン。
-        複数要素の挿入。
-        Mobileだと✖ボタンの右下にスペースがない
+        閉じるボタン
+            スクロールバー表示の有無に関わらず画面右上から一定位置にしたい。
+            fixedにして上部スペースに被せても横スクロールに追従しないからイマイチ。
+            縦だけscrollに合わせて移動するように弄っても、スクロールバーが表示される場合に被って不格好になる。
 */
 
 // Modules
@@ -29,6 +29,7 @@ import bodyCtrl from './lib/body-ctrl.js';
 import StyleHandle from 'style-handle';
 
 // Var
+const ModuleName = 'easy-modal-window';
 const doc = document;
 const head = doc.head;
 const body = doc.body;
@@ -36,6 +37,99 @@ const duration_ms = 160; //アニメーション総時間
 let isOpen = false; // 展開の状態、同期処理内で早めに切り替える、Promise#resolveのタイミングとは関係ない
 let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
 let isBackgroundBlur = true; // 展開中に背景をボカすか
+let insertedElement; // 外部から挿入中の要素
+
+// Styleまとめ、本当はAutoPrefix→圧縮→CSS Module読み込みしたいが
+const css_text = `
+    /* DOM構造順 */
+
+    .${ModuleName}-container {
+        margin: 0;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -moz-box-orient: vertical;
+        -moz-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        -moz-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+        -moz-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-flex-shrink: 0;
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: auto;
+        z-index: 1000;
+    }
+
+    .${ModuleName}-space_top {
+        /* min-height: 2.2rem; */
+        -webkit-box-flex: 50;
+        -webkit-flex-grow: 50;
+        -moz-box-flex: 50;
+        -ms-flex-positive: 50;
+        flex-grow: 50;
+        -webkit-flex-shrink: 0;
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+    }
+    .${ModuleName}-space_top-closeButton {
+        position: fixed;
+        top: 1vh;
+        right: 1vw;
+        padding: 0.3rem;
+        color: white;
+        font-size: 1.6rem;
+        cursor: default;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-transition: 0.3s;
+        -o-transition: 0.3s;
+        -moz-transition: 0.3s;
+        transition: 0.3s;
+    }
+    .${ModuleName}-space_top-closeButton:hover {
+        color: firebrick;
+        transition: 0.3s;
+    }
+
+    .${ModuleName}-centering {
+        max-width: 100%;
+        /* max-height: 100%; */
+        flex-shrink: 0;
+    }
+
+    .${ModuleName}-space_bottom {
+        -webkit-box-flex: 50;
+        -webkit-flex-grow: 50;
+        -moz-box-flex: 50;
+        -ms-flex-positive: 50;
+        flex-grow: 50;
+    }
+`;
 
 /*
     APIの入れ物
@@ -80,36 +174,17 @@ const obj = {
     get space_top(){
         if( !this._space_top ){
             // 親
-            const div = makeElement('div', {style: `
-                min-height: 2.2rem;
-                flex-grow: 50;
-                flex-shrink: 0;
-                text-align: right;
-                cursor: default;
-                user-select: none;
-            `});
+            const div = makeElement('div', {
+                class: `${ModuleName}-space_top`
+            });
             // 子、ボタン代わり
             const div_closeButton = makeElement('div', '✕', {
-                class: 'easy-modal-window-closeButton'
+                class: `${ModuleName}-space_top-closeButton`
             });
-            StyleHandle.addText(`
-                .easy-modal-window-closeButton{
-                    position: absolute;
-                    right: 0;
-                    padding: 0.3rem;
-                    color: white;
-                    font-size: 1.6rem;
-                    user-select: none;
-                    transition: 0.3s;
-                }
-                .easy-modal-window-closeButton:hover{
-                    color: firebrick;
-                    transition: 0.3s;
-                }
-            `);
             div_closeButton.onclick = close;
             div.appendChild(div_closeButton);
             this._space_top = div;
+
         }
         return this._space_top;
     },
@@ -118,37 +193,32 @@ const obj = {
     get space_bottom(){
         if( !this._space_bottom ){
             // 親
-            const div = makeElement('div', {style: `
-                flex-grow: 50;
-            `});
+            const div = makeElement('div', {
+                class: `${ModuleName}-space_bottom`
+            });
             this._space_bottom = div;
         }
         return this._space_bottom;
     },
 
-    // 背景＆flexboxコンテナ
+    // 背景＆flexboxコンテナ、本体要素
     get containerElement(){
         if( !this._containerElement ){
             const div = makeElement('div', {
-                class: `easy-modal-window-${Date.now()}`,
-                style: `
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    align-items: center;
-                    flex-shrink: 0;
-                    position: fixed;
-                    top: 0;
-                    bottom: 0;
-                    left: 0;
-                    right: 0;
-                    overflow: auto;
-                    z-index: 1000;
-            `});
+                class: `${ModuleName}-container`
+            });
             this._containerElement = div;
+
+            div.append( obj.space_top );
+            div.append( obj.centeringElement );
+            div.append( obj.space_bottom );
+
+            // 設定有効時、背景(container)クリックで閉じる、e.targetの確認を端折ると誤爆する
+            div.addEventListener('click', (e)=>{
+                isCloseOnBackgroundClick && e.target===div && close();
+            }, false);
+            // CSS適用
+            StyleHandle.addText(css_text);
         }
         return this._containerElement;
     },
@@ -157,30 +227,14 @@ const obj = {
     get centeringElement(){
         if( !this._centeringElement ){
             const div = makeElement('div', {
-                style: `
-                    max-width: 100%;
-                    /* max-height: 100%; */
-                    flex-shrink: 0;
-            `});
+                class: `${ModuleName}-centering`
+            });
             this._centeringElement = div;
         }
         return this._centeringElement;
     }
+
 }
-
-
-
-obj.containerElement.append( obj.space_top );
-obj.containerElement.append( obj.centeringElement );
-obj.containerElement.append( obj.space_bottom );
-
-// 設定有効時、背景(container or centering)クリックで閉じる
-obj.containerElement.addEventListener('click', (e)=>{
-    if(isCloseOnBackgroundClick && e.target===obj.containerElement){
-         close();
-    }
-}, false);
-
 
 
 /*
@@ -205,6 +259,9 @@ function open(item){
         body.appendChild(container);
         centering.appendChild(item);
 
+        // 挿入中要素メモ
+        insertedElement = item;
+
         // body要素をheight100%に縮小して非表示部分を隠す
         bodyCtrl.hidden();
 
@@ -228,8 +285,8 @@ function open(item){
             fill: 'forwards'
         });
 
-        isBackgroundBlur && bodyCtrl.blur({selector: `.${container.className}`}); // モーダル以外をボカす
-
+        // 設定有効時はモーダル以外をボカす
+        isBackgroundBlur && bodyCtrl.blur({selector: `.${container.className}`});
 
         // アニメーション終了時にresolve、無名関数を挟んでeventを渡さない
         container_apObj.onfinish = (e)=>{
@@ -253,11 +310,9 @@ function open(item){
             引数チェックはopenでやったから省略
 */
 function replace(item_new){
-    const {containerElement: container, centeringElement: centering} = obj;
-    const item_old = centering.firstChild;
     return new Promise( (resolve, reject)=>{
         // 古いアイテムをフェードアウト
-        const apObj_old = item_old.animate([{
+        const apObj_old = insertedElement.animate([{
             opacity: 1
         }, {
             opacity: 0
@@ -267,9 +322,10 @@ function replace(item_new){
         }).onfinish = resolve;
     }).then( (e)=>{
         // フェードアウト後にパージ
-        item_old.remove();
-        // 新アイテムを挿入してフェードイン
-        centering.appendChild(item_new);
+        insertedElement.remove();
+        // 新アイテムを挿入して変数上書きしてフェードイン
+        obj.centeringElement.appendChild(item_new);
+        insertedElement = item_new;
         const item_apObj = item_new.animate([{
             opacity: 0,
         }, {
@@ -304,10 +360,8 @@ function close(){
         return Promise.resolve();
     }
 
-    const {containerElement: container, centeringElement: centering} = obj;
-    const item = centering.firstChild;
     // コンテナをフェードアウト
-    const container_apObj = container.animate([{
+    const container_apObj = obj.containerElement.animate([{
         background: 'rgba(0,0,0, 0.7)',
     }, {
         background: 'rgba(0,0,0, 0)',
@@ -318,7 +372,7 @@ function close(){
     const container_promise = AwaitEvent(container_apObj, 'finish', false);
 
     // アイテムをフェードアウト
-    const item_apObj = item.animate([{
+    const insertedElement_apObj = insertedElement.animate([{
         opacity: 1
     }, {
         opacity: 0
@@ -326,25 +380,27 @@ function close(){
         duration: duration_ms,
         fill: 'forwards'
     });
-    const item_promise = AwaitEvent(item_apObj, 'finish', false);
+    const insertedElement_promise = AwaitEvent(insertedElement_apObj, 'finish', false);
 
-    bodyCtrl.focus(); // ボカし解除
+    bodyCtrl.focus(); // ボカし解除、ボカしてなければ無反応
     isOpen = false;
 
     // 両フェードが終われば両要素をパージしてwindowサイズを戻してresolve
     return Promise.all([
         container_promise,
-        item_promise
+        insertedElement_promise
     ]).then( (evtArr)=>{
-        container.remove();
-        item.remove();
+        obj.containerElement.remove();
+        insertedElement.remove();
         bodyCtrl.view(); // windowサイズ復元
         // closeイベント
         EasyModalWindow::onClose({
-            target: item,
+            target: insertedElement,
             timeStamp: Date.now(),
             type: 'close'
         });
+        // 挿入中メモ削除
+        insertedElement = null;
     });
 }
 

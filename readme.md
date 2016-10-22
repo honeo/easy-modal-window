@@ -1,6 +1,4 @@
 # easy-modal-window
-[honeo/easy-modal-window](https://github.com/honeo/easy-modal-window)  
-[easy-modal-window](https://www.npmjs.com/package/easy-modal-window)
 
 ## なにこれ
 Flexbox実装のかんたんモーダルウィンドウ。
