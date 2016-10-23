@@ -5,7 +5,9 @@ import makeElement from 'make-element';
 import AwaitEvent from '@honeo/await-event';
 import {is, not} from '@honeo/type-check';
 import ModalWindow from '../';
-//import ModalWindow from '../legacy';
+
+// 設定
+ModalWindow.debug = true;
 
 // Var
 const div_menu = document.getElementById('menu');

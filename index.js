@@ -45,12 +45,20 @@ let backgroundColor = 'rgba(0,0,0, 0.7)'; // 背景色
 const css_text = `
     /* DOM構造順 */
 
-    .${ModuleName}-container {
+    .${ModuleName}-container,
+    .${ModuleName}-space_top,
+    .${ModuleName}-space_top-closeButton,
+    .${ModuleName}-centering,
+    .${ModuleName}-space_bottom,
+    {
         margin: 0;
         padding: 0;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+    }
+
+    .${ModuleName}-container {
         display: -webkit-box;
         display: -webkit-flex;
         display: -moz-box;
@@ -169,7 +177,8 @@ const EasyModalWindow = {
     },
     open,
     close,
-    toggle
+    toggle,
+    debug: false
 }
 
 /*
@@ -217,6 +226,7 @@ const obj = {
     // 背景＆flexboxコンテナ、本体要素
     get containerElement(){
         if( !this._containerElement ){
+            EasyModalWindow.debug && console.log(`${ModuleName}: create containerElement`);
             const div = makeElement('div', {
                 class: `${ModuleName}-container`
             });
