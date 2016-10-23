@@ -49,7 +49,7 @@ const css_text = `
     .${ModuleName}-space_top,
     .${ModuleName}-space_top-closeButton,
     .${ModuleName}-centering,
-    .${ModuleName}-space_bottom,
+    .${ModuleName}-space_bottom
     {
         margin: 0;
         padding: 0;
