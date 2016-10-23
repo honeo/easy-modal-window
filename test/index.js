@@ -45,16 +45,27 @@ attributeObjectArr.forEach( ({style, value})=>{
 	div_menu.appendChild(button);
 });
 
+// Selectorから挿入テスト
+const button_selector = makeElement('input', {
+	value: 'selector',
+	type: 'button'
+});
+button_selector.addEventListener('click', function(e){
+	// ついでにエラーテスト
+	ModalWindow.open('#hage').catch( (error)=>{
+		ModalWindow.open('#piyo');
+	});
+}, false);
+div_menu.append(button_selector);
 
 // 入れ替えテスト
 const button_replace = makeElement('input', {
 	value: 'replace',
 	type: 'button'
 });
-const block_style = attributeObjectArr[0].style + 'border: dashed 2px white;' + 'overflow: auto;';
+const block_style = attributeObjectArr[0].style + 'border: dashed 2px white;' + 'overflow: auto;' + 'color: white;';
 const blockA = makeElement('div', {style: block_style}, 'next');
 const blockB = makeElement('div', {style: block_style}, 'close');
-
 button_replace.addEventListener('click', (e)=>{
 	ModalWindow.toggle(blockA).then( _=>{
 		return AwaitEvent(blockA, 'click', false);
@@ -74,11 +85,11 @@ div_menu.appendChild(button_replace);
 // 閉じる操作
 const button_closeModeChange = makeElement('input', {
 	type: 'button',
-	value: `背景クリックで閉じる: ${ModalWindow.isCloseOnBackgroundClick}`
+	value: `isCloseOnBackgroundClick: ${ModalWindow.isCloseOnBackgroundClick}`
 });
 button_closeModeChange.addEventListener('click', function(e){
 	ModalWindow.isCloseOnBackgroundClick = !ModalWindow.isCloseOnBackgroundClick;
-	this.value = `背景クリックで閉じる: ${ModalWindow.isCloseOnBackgroundClick}`;
+	this.value = `isCloseOnBackgroundClick: ${ModalWindow.isCloseOnBackgroundClick}`;
 }, false);
 div_menu.appendChild(button_closeModeChange);
 
@@ -93,9 +104,19 @@ button_blurSwitch.addEventListener('click', function(e){
 }, false);
 div_menu.appendChild(button_blurSwitch);
 
+// 背景色変更
+const input_color = makeElement('input', {
+	type: 'color'
+});
+input_color.addEventListener('input', function(e){
+	ModalWindow.backgroundColor = e.target.value;
+}, false);
+div_menu.appendChild(input_color);
+
 // Events
 ModalWindow.onopen = (e)=>{
 	console.log('onopen', e);
+	console.log('insertedElement', ModalWindow.insertedElement);
 }
 ModalWindow.onreplace = (e)=>{
 	console.log('onreplace', e);

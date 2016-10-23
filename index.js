@@ -34,10 +34,12 @@ const doc = document;
 const head = doc.head;
 const body = doc.body;
 const duration_ms = 160; //アニメーション総時間
+const weakMap = new WeakMap(); // selectorから挿入した要素:挿入地点メモのダミー要素
 let isOpen = false; // 展開の状態、同期処理内で早めに切り替える、Promise#resolveのタイミングとは関係ない
 let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
 let isBackgroundBlur = true; // 展開中に背景をボカすか
 let insertedElement; // 外部から挿入中の要素
+let backgroundColor = 'rgba(0,0,0, 0.7)'; // 背景色
 
 // Styleまとめ、本当はAutoPrefix→圧縮→CSS Module読み込みしたいが
 const css_text = `
@@ -135,6 +137,17 @@ const css_text = `
     APIの入れ物
 */
 const EasyModalWindow = {
+    get backgroundColor(){
+        return backgroundColor;
+    },
+    set backgroundColor(colortext){
+        if( is.str(colortext) ){
+            backgroundColor = colortext;
+        }
+    },
+    get insertedElement(){
+        return insertedElement;
+    },
     get isOpen(){
         return isOpen;
     },
@@ -232,20 +245,43 @@ const obj = {
             this._centeringElement = div;
         }
         return this._centeringElement;
-    }
+    },
 
+    // selectorから挿入した要素と入れ替えで置いておくやつ
+    get dummyElement(){
+        if( !this._dummyElement ){
+            this._dummyElement = makeElement('span', {
+                class: `${ModuleName}-dummy`,
+                style: `display: none;`
+            });
+        }
+        return this._dummyElement;
+    }
 }
 
 
 /*
     引数要素でモーダルウィンドウを開く
+        引数がElementならそのまま使い、文字列ならselectorとして扱い検索する。
+            一致する要素を持つselector文字列でない場合はrejectする。
         既に開いていれば中身の要素を入れ替える
-            入れ替えも何かアニメーションしたい
         promiseを返す
         コンテナとアイテムのフェードをeasingでズラすと目に悪い
 */
 function open(item){
-    if( not.element(item) ){
+    // 引数チェック、エラーを投げるのは引数が要素でも文字列でもない場合のみ、他はrejectする
+    if( is.str(item) ){
+        const element = doc.querySelector(item);
+        if( element ){
+            // 対になるダミー要素を作って入れ替え
+            const dummy = obj.dummyElement.cloneNode(true);
+            weakMap.set(element, dummy);
+            element.replaceWith(dummy);
+            item = element;
+        }else{
+            return Promise.reject(`${item}: not found`);
+        }
+    }else if( not.element(item) ){
         throw new TypeError(`invalid argument`);
     }
     // 既に開いていれば入れ替える
@@ -255,9 +291,8 @@ function open(item){
 
     return new Promise( (resolve, reject)=>{
 
-        const {containerElement: container, centeringElement: centering} = obj;
-        body.appendChild(container);
-        centering.appendChild(item);
+        body.appendChild(obj.containerElement);
+        obj.centeringElement.appendChild(item);
 
         // 挿入中要素メモ
         insertedElement = item;
@@ -266,10 +301,10 @@ function open(item){
         bodyCtrl.hidden();
 
         // モーダルウィンドウをフェードイン
-        const container_apObj = container.animate([{
+        const container_apObj = obj.containerElement.animate([{
             background: 'rgba(0,0,0, 0)',
         }, {
-            background: 'rgba(0,0,0, 0.7)',
+            background: backgroundColor,
         }], {
             duration: duration_ms,
             fill: 'forwards'
@@ -286,7 +321,7 @@ function open(item){
         });
 
         // 設定有効時はモーダル以外をボカす
-        isBackgroundBlur && bodyCtrl.blur({selector: `.${container.className}`});
+        isBackgroundBlur && bodyCtrl.blur({selector: `.${obj.containerElement.className}`});
 
         // アニメーション終了時にresolve、無名関数を挟んでeventを渡さない
         container_apObj.onfinish = (e)=>{
@@ -321,8 +356,14 @@ function replace(item_new){
             fill: 'forwards'
         }).onfinish = resolve;
     }).then( (e)=>{
-        // フェードアウト後にパージ
-        insertedElement.remove();
+        // フェードアウト後にパージ、selectorなら対になるダミー要素があるから入れ替える
+        if( weakMap.has(insertedElement) ){
+            const dummy = weakMap.get(insertedElement);
+            dummy.replaceWith(insertedElement);
+        }else{
+            insertedElement.remove();
+        }
+
         // 新アイテムを挿入して変数上書きしてフェードイン
         obj.centeringElement.appendChild(item_new);
         insertedElement = item_new;
@@ -362,7 +403,7 @@ function close(){
 
     // コンテナをフェードアウト
     const container_apObj = obj.containerElement.animate([{
-        background: 'rgba(0,0,0, 0.7)',
+        background: backgroundColor,
     }, {
         background: 'rgba(0,0,0, 0)',
     }], {
@@ -378,7 +419,7 @@ function close(){
         opacity: 0
     }], {
         duration: duration_ms,
-        fill: 'forwards'
+        fill: 'none'
     });
     const insertedElement_promise = AwaitEvent(insertedElement_apObj, 'finish', false);
 
@@ -391,7 +432,13 @@ function close(){
         insertedElement_promise
     ]).then( (evtArr)=>{
         obj.containerElement.remove();
-        insertedElement.remove();
+        // selectorなら対になるダミー要素があるから入れ替える
+        if( weakMap.has(insertedElement) ){
+            const dummy = weakMap.get(insertedElement);
+            dummy.replaceWith(insertedElement);
+        }else{
+            insertedElement.remove();
+        }
         bodyCtrl.view(); // windowサイズ復元
         // closeイベント
         EasyModalWindow::onClose({
