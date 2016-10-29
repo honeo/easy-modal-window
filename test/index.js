@@ -106,6 +106,17 @@ button_blurSwitch.addEventListener('click', function(e){
 }, false);
 div_menu.appendChild(button_blurSwitch);
 
+// bodyスクロールバー表示・非表示
+const button_hideScrollbar = makeElement('input', {
+	type: 'button',
+	value: `isHideScrollbar: ${ModalWindow.isHideScrollbar}`
+});
+button_hideScrollbar.addEventListener('click', function(e){
+	ModalWindow.isHideScrollbar = !ModalWindow.isHideScrollbar;
+	this.value = `isHideScrollbar: ${ModalWindow.isHideScrollbar}`;
+}, false);
+div_menu.appendChild(button_hideScrollbar);
+
 // 背景色変更
 const input_color = makeElement('input', {
 	type: 'color'

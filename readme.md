@@ -58,6 +58,14 @@ console.log(ModalWindow.isBackgroundBlur); // true
 ModalWindow.isBackgroundBlur = false;
 ```
 
+### .isHideScrollbar
+モーダルウィンドウの展開中にbodyのスクロールバーを隠すか。
+falseの場合、windowサイズより大きい要素を展開するとスクロールバーがー二重になる。
+```js
+console.log(ModalWindow.isHideScrollbar); // true
+ModalWindow.isHideScrollbar = false;
+```
+
 ### .isOpen
 モーダルウィンドウが展開中ならtrueを、そうでなければfalseが入る。
 読取専用。

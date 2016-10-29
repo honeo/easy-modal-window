@@ -38,6 +38,7 @@ const weakMap = new WeakMap(); // selectorから挿入した要素:挿入地点�
 let isOpen = false; // 展開の状態、同期処理内で早めに切り替える、Promise#resolveのタイミングとは関係ない
 let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
 let isBackgroundBlur = true; // 展開中に背景をボカすか
+let isHideScrollbar = true; // 展開中にbodyのスクロールバーを隠すか
 let insertedElement; // 外部から挿入中の要素
 let backgroundColor = 'rgba(0,0,0, 0.7)'; // 背景色
 
@@ -175,6 +176,14 @@ const EasyModalWindow = {
             isCloseOnBackgroundClick = arg;
         }
     },
+    get isHideScrollbar(){
+        return isHideScrollbar;
+    },
+    set isHideScrollbar(arg){
+        if( is.bool(arg) ){
+            isHideScrollbar = arg;
+        }
+    },
     open,
     close,
     toggle,
@@ -307,8 +316,8 @@ function open(item){
         // 挿入中要素メモ
         insertedElement = item;
 
-        // body要素をheight100%に縮小して非表示部分を隠す
-        bodyCtrl.hidden();
+        // 設定有効時、body要素をheight100%に縮小して非表示部分を隠す
+        isHideScrollbar && bodyCtrl.hidden();
 
         // モーダルウィンドウをフェードイン
         const container_apObj = obj.containerElement.animate([{
