@@ -36,8 +36,9 @@ const body = doc.body;
 const duration_ms = 160; //アニメーション総時間
 const weakMap = new WeakMap(); // selectorから挿入した要素:挿入地点メモのダミー要素
 let isOpen = false; // 展開の状態、同期処理内で早めに切り替える、Promise#resolveのタイミングとは関係ない
-let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
 let isBackgroundBlur = true; // 展開中に背景をボカすか
+let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
+let isCloseOnInsertedElement = false; // 挿入した要素のクリックでも閉じるか
 let isHideScrollbar = true; // 展開中にbodyのスクロールバーを隠すか
 let insertedElement; // 外部から挿入中の要素
 let backgroundColor = 'rgba(0,0,0, 0.7)'; // 背景色
@@ -176,6 +177,14 @@ const EasyModalWindow = {
             isCloseOnBackgroundClick = arg;
         }
     },
+    get isCloseOnInsertedElement(){
+        return isCloseOnInsertedElement;
+    },
+    set isCloseOnInsertedElement(arg){
+        if( is.bool(arg) ){
+            isCloseOnInsertedElement = arg;
+        }
+    },
     get isHideScrollbar(){
         return isHideScrollbar;
     },
@@ -246,9 +255,15 @@ const obj = {
             div.append( obj.space_bottom );
 
             // 設定有効時、背景(container)クリックで閉じる、e.targetの確認を端折ると誤爆する
-            div.addEventListener('click', (e)=>{
-                isCloseOnBackgroundClick && e.target===div && close();
-            }, false);
+            window.addEventListener('click', (e)=>{
+                if( isCloseOnBackgroundClick &&  e.target===div){
+                    close();
+                }else if( e.target.className===`${ModuleName}-space_top-closeButton` ){
+                    close();
+                }else if( isCloseOnInsertedElement && e.target===insertedElement ){
+                    close();
+                }
+            }, true);
             // CSS適用
             StyleHandle.addText(css_text);
         }

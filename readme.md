@@ -58,6 +58,20 @@ console.log(ModalWindow.isBackgroundBlur); // true
 ModalWindow.isBackgroundBlur = false;
 ```
 
+### .isCloseOnBackgroundClick
+✕ボタン以外にも背景クリックでモーダルウィンドウを閉じるか。  
+```js
+console.log(ModalWindow.isCloseOnBackgroundClick); // true
+ModalWindow.isCloseOnBackgroundClick = false;
+```
+
+### .isCloseOnInsertedElement
+✕ボタン以外にも展開中の要素クリックでモーダルウィンドウを閉じるか。
+```js
+console.log(ModalWindow.isCloseOnInsertedElement); // false
+ModalWindow.isCloseOnInsertedElement = true;
+```
+
 ### .isHideScrollbar
 モーダルウィンドウの展開中にbodyのスクロールバーを隠すか。
 falseの場合、windowサイズより大きい要素を展開するとスクロールバーがー二重になる。
@@ -74,13 +88,6 @@ console.log(ModalWindow.isOpen); // false
 ModalWindow.open(element).then( _=>{
 	console.log(ModalWindow.isOpen); // true
 });
-```
-
-### .isCloseOnBackgroundClick
-✕ボタン以外にも背景クリックでモーダルウィンドウを閉じるか。  
-```js
-console.log(ModalWindow.isCloseOnBackgroundClick); // true
-ModalWindow.isCloseOnBackgroundClick = false;
 ```
 
 ### Events
