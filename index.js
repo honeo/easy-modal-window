@@ -221,7 +221,6 @@ const obj = {
             const div_closeButton = makeElement('div', '✕', {
                 class: `${ModuleName}-space_top-closeButton`
             });
-            div_closeButton.onclick = close;
             div.appendChild(div_closeButton);
             this._space_top = div;
 
@@ -254,13 +253,16 @@ const obj = {
             div.append( obj.centeringElement );
             div.append( obj.space_bottom );
 
-            // 設定有効時、背景(container)クリックで閉じる、e.targetの確認を端折ると誤爆する
+            // 閉じる設定る
             window.addEventListener('click', (e)=>{
                 if( isCloseOnBackgroundClick &&  e.target===div){
+                    // 設定有効なら背景クリック時
                     close();
                 }else if( e.target.className===`${ModuleName}-space_top-closeButton` ){
+                    // 閉じるボタン
                     close();
-                }else if( isCloseOnInsertedElement && e.target===insertedElement ){
+                }else if( isCloseOnInsertedElement && (e.target===insertedElement||insertedElement.contains(e.target)) ){
+                    // 設定有効なら挿入した要素とその子孫
                     close();
                 }
             }, true);
