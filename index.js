@@ -41,7 +41,7 @@ let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかど�
 let isCloseOnInsertedElement = false; // 挿入した要素のクリックでも閉じるか
 let isHideScrollbar = true; // 展開中にbodyのスクロールバーを隠すか
 let insertedElement; // 外部から挿入中の要素
-let backgroundColor = 'rgba(0,0,0, 0.7)'; // 背景色
+let backgroundColor = 'rgba(0,0,0, 0.75)'; // 背景色
 
 // Styleまとめ、本当はAutoPrefix→圧縮→CSS Module読み込みしたいが
 const css_text = `
@@ -253,7 +253,7 @@ const obj = {
             div.append( obj.centeringElement );
             div.append( obj.space_bottom );
 
-            // 閉じる設定る
+            // 閉じる設定
             window.addEventListener('click', (e)=>{
                 if( isCloseOnBackgroundClick &&  e.target===div){
                     // 設定有効なら背景クリック時

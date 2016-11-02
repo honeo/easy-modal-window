@@ -4,7 +4,7 @@
   "description": "かんたんモーダルウィンドウ",
   "main": "index.js",
   "scripts": {
-    "test": "node test/test.js"
+    "test": "npm update && node test/test.js"
   },
   "author": "honeo",
   "license": "MIT",
