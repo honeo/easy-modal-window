@@ -41,7 +41,7 @@ let isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかど�
 let isCloseOnInsertedElement = false; // 挿入した要素のクリックでも閉じるか
 let isHideScrollbar = true; // 展開中にbodyのスクロールバーを隠すか
 let insertedElement; // 外部から挿入中の要素
-let backgroundColor = 'rgba(0,0,0, 0.75)'; // 背景色
+let backgroundColor = 'rgba(0,0,0, 0.72)'; // 背景色
 
 // Styleまとめ、本当はAutoPrefix→圧縮→CSS Module読み込みしたいが
 const css_text = `
@@ -302,7 +302,7 @@ const obj = {
             一致する要素を持つselector文字列でない場合はrejectする。
         既に開いていれば中身の要素を入れ替える
         promiseを返す
-        コンテナとアイテムのフェードをeasingでズラすと目に悪い
+        なるべく素早く内容が確認できるように挿入要素のアニメーションは短く
 */
 function open(item){
     // 引数チェック、エラーを投げるのは引数が要素でも文字列でもない場合のみ、他はrejectする
@@ -336,13 +336,14 @@ function open(item){
         // 設定有効時、body要素をheight100%に縮小して非表示部分を隠す
         isHideScrollbar && bodyCtrl.hidden();
 
-        // モーダルウィンドウをフェードイン
+        // モーダルウィンドウ（背景）をフェードイン、ちょいディレイで中身より遅らせる
         const container_apObj = obj.containerElement.animate([{
             background: 'rgba(0,0,0, 0)',
         }, {
             background: backgroundColor,
         }], {
-            duration: duration_ms,
+            duration: 334,
+            easing: 'ease-in-out',
             fill: 'forwards'
         });
 
@@ -353,13 +354,14 @@ function open(item){
             opacity: 1,
         }], {
             duration: duration_ms,
+            easing: 'ease-out',
             fill: 'forwards'
         });
 
         // 設定有効時はモーダル以外をボカす
         isBackgroundBlur && bodyCtrl.blur({selector: `.${obj.containerElement.className}`});
 
-        // アニメーション終了時にresolve、無名関数を挟んでeventを渡さない
+        // アニメーション終了時にresolve
         container_apObj.onfinish = (e)=>{
             resolve();
             EasyModalWindow::onOpen({
@@ -426,6 +428,7 @@ function replace(item_new){
         promiseを返す
         展開中ならコンテナ・アイテムのフェードアウトを待ってresolve
         展開中でなければ即resolve
+        すぐ操作できるように閉じる際は素早く
 */
 function close(){
     if( !isOpen ){
@@ -444,9 +447,13 @@ function close(){
         background: 'rgba(0,0,0, 0)',
     }], {
         duration: duration_ms,
+        easing: 'ease-in-out',
         fill: 'forwards'
     });
-    const container_promise = AwaitEvent(container_apObj, 'finish', false);
+    const container_promise = AwaitEvent(container_apObj, 'finish', false).then( _=>{
+        // パージ
+        obj.containerElement.remove();
+    });
 
     // アイテムをフェードアウト
     const insertedElement_apObj = insertedElement.animate([{
@@ -457,24 +464,24 @@ function close(){
         duration: duration_ms,
         fill: 'none'
     });
-    const insertedElement_promise = AwaitEvent(insertedElement_apObj, 'finish', false);
-
-    bodyCtrl.focus(); // ボカし解除、ボカしてなければ無反応
-    isOpen = false;
-
-    // 両フェードが終われば両要素をパージしてwindowサイズを戻してresolve
-    return Promise.all([
-        container_promise,
-        insertedElement_promise
-    ]).then( (evtArr)=>{
-        obj.containerElement.remove();
-        // selectorなら対になるダミー要素があるから入れ替える
+    const insertedElement_promise = AwaitEvent(insertedElement_apObj, 'finish', false).then( _=>{
+        // パージ、selectorなら対になるダミー要素があるから入れ替える
         if( weakMap.has(insertedElement) ){
             const dummy = weakMap.get(insertedElement);
             dummy.replaceWith(insertedElement);
         }else{
             insertedElement.remove();
         }
+    });
+
+    bodyCtrl.focus(); // ボカし解除、ボカしてなければ無反応
+    isOpen = false;
+
+    // 両パージが終わればwindowサイズを戻してresolve
+    return Promise.all([
+        container_promise,
+        insertedElement_promise
+    ]).then( (evtArr)=>{
         bodyCtrl.view(); // windowサイズ復元
         // closeイベント
         EasyModalWindow::onClose({

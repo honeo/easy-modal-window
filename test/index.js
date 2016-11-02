@@ -39,7 +39,7 @@ attributeObjectArr.forEach( ({style, value})=>{
 		type: 'button'
 	});
 	const element = makeElement('div', {
-		style: style + 'border: dashed 2px white;' + 'overflow: auto;'
+		style: style + 'background-color: white; border: dashed 2px gray;' + 'overflow: auto;'
 	});
 	button.addEventListener('click', (e)=>{
 		ModalWindow.open(element);

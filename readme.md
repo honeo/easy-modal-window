@@ -36,9 +36,8 @@ ModalWindow.open(element).then(_=>{
 
 ### .backgroundColor
 展開中の背景色に使用する文字列。  
-標準は "rgba(0,0,0, 0.7)" .
 ```js
-console.log(ModalWindow.backgroundColor); // "rgba(0,0,0, 0.7)"
+console.log(ModalWindow.backgroundColor); // "rgba(0,0,0, 0.72)"
 ModalWindow.backgroundColor = "red";
 ```
 
@@ -81,7 +80,7 @@ ModalWindow.isHideScrollbar = false;
 ```
 
 ### .isOpen
-モーダルウィンドウが展開中ならtrueを、そうでなければfalseが入る。
+モーダルウィンドウが展開中ならtrue、そうでなければfalseが入る。
 読取専用。
 ```js
 console.log(ModalWindow.isOpen); // false
