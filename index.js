@@ -336,14 +336,14 @@ function open(item){
         // 設定有効時、body要素をheight100%に縮小して非表示部分を隠す
         isHideScrollbar && bodyCtrl.hidden();
 
-        // モーダルウィンドウ（背景）をフェードイン、ちょいディレイで中身より遅らせる
+        // モーダルウィンドウ（背景）をフェードイン、挿入要素より遅らせる
         const container_apObj = obj.containerElement.animate([{
             background: 'rgba(0,0,0, 0)',
         }, {
             background: backgroundColor,
         }], {
             duration: 334,
-            easing: 'ease-in-out',
+            easing: 'ease-out',
             fill: 'forwards'
         });
 
