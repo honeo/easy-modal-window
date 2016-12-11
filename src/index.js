@@ -25,7 +25,7 @@ import AwaitEvent from '@honeo/await-event';
 import makeElement from 'make-element';
 import {is, not} from '@honeo/type-check';
 import {onOpen, onReplace, onClose} from './lib/events.js';
-import bodyCtrl from './lib/body-ctrl.js';
+import bodyCtrl from './lib/body-ctrl';
 import StyleHandle from 'style-handle';
 
 // Var
@@ -51,8 +51,7 @@ const css_text = `
     .${ModuleName}-space_top,
     .${ModuleName}-space_top-closeButton,
     .${ModuleName}-centering,
-    .${ModuleName}-space_bottom
-    {
+    .${ModuleName}-space_bottom {
         margin: 0;
         padding: 0;
         -webkit-box-sizing: border-box;
@@ -145,6 +144,7 @@ const css_text = `
 
 /*
     APIの入れ物
+        設定値はプロパティ用オブジェクトを作って変数とまとめたいが
 */
 const EasyModalWindow = {
     get backgroundColor(){
@@ -355,7 +355,7 @@ function open(item){
         }], {
             duration: duration_ms,
             easing: 'ease-out',
-            fill: 'forwards'
+            fill: 'none'
         });
 
         // 設定有効時はモーダル以外をボカす
@@ -450,21 +450,30 @@ function close(){
         easing: 'ease-in-out',
         fill: 'forwards'
     });
-    const container_promise = AwaitEvent(container_apObj, 'finish', false).then( _=>{
-        // パージ
-        obj.containerElement.remove();
-    });
+    const container_promise = AwaitEvent(container_apObj, 'finish', false);
 
-    // アイテムをフェードアウト
-    const insertedElement_apObj = insertedElement.animate([{
-        opacity: 1
-    }, {
-        opacity: 0
-    }], {
-        duration: duration_ms,
-        fill: 'none'
-    });
-    const insertedElement_promise = AwaitEvent(insertedElement_apObj, 'finish', false).then( _=>{
+    // // アイテムをフェードアウト
+    // const insertedElement_apObj = insertedElement.animate([{
+    //     opacity: 1
+    // }, {
+    //     opacity: 0
+    // }], {
+    //     duration: duration_ms,
+    //     fill: 'none'
+    // });
+    // const insertedElement_promise = AwaitEvent(insertedElement_apObj, 'finish', false);
+
+    bodyCtrl.focus(); // ボカし解除、ボカしてなければ無反応
+    isOpen = false;
+
+    // 両フェードアウトが終わればパージしてwindowサイズを戻してresolve
+    return Promise.all([
+        container_promise
+        //,insertedElement_promise
+    ]).then( (evtArr)=>{
+
+        obj.containerElement.remove();
+
         // パージ、selectorなら対になるダミー要素があるから入れ替える
         if( weakMap.has(insertedElement) ){
             const dummy = weakMap.get(insertedElement);
@@ -472,16 +481,7 @@ function close(){
         }else{
             insertedElement.remove();
         }
-    });
 
-    bodyCtrl.focus(); // ボカし解除、ボカしてなければ無反応
-    isOpen = false;
-
-    // 両パージが終わればwindowサイズを戻してresolve
-    return Promise.all([
-        container_promise,
-        insertedElement_promise
-    ]).then( (evtArr)=>{
         bodyCtrl.view(); // windowサイズ復元
         // closeイベント
         EasyModalWindow::onClose({

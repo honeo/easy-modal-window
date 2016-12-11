@@ -1,6 +1,6 @@
 // Modules
 import 'babel-polyfill';
-import '../../../my-polyfill';
+import '@honeo/web-api-polyfill';
 import makeElement from 'make-element';
 import AwaitEvent from '@honeo/await-event';
 import {is, not} from '@honeo/type-check';
@@ -11,26 +11,33 @@ ModalWindow.debug = true;
 
 // Var
 const div_menu = document.getElementById('menu');
+const css_background = 'background-image: url("macedonia.png"); background-size: 100% 100%;';
 
 // 各サイズ
 const attributeObjectArr = [{
-	style: 'width: 300px; height:300px;',
-	value: '300x300'
+	style: css_background+'width: 300px; height: 300px;',
+	value: '300,300px'
 }, {
-	style: 'width: 1000px; height:300px;',
-	value: '1000x300'
+	style: css_background+'width: 25vw; height:25vh;',
+	value: '25,25%'
 }, {
-	style: 'width: 300px; height:1000px;',
-	value: '300x1000'
+	style: css_background+'width: 125vw; height: 25vh;',
+	value: '125,25%'
 }, {
-	style: 'width: 1000px; height:1000px;',
-	value: '1000x1000'
+	style: css_background+'width: 25vw; height: 125vh;',
+	value: '25,125%'
 }, {
-	style: 'width: 2000px; height: 300px;',
-	value: '2000x300'
+	style: css_background+'width: 75vw; height: 75vh;',
+	value: '75,75%'
 }, {
-	style: 'width: 300px; height: 2000px;',
-	value: '300x2000'
+	style: css_background+'width: 150vw; height: 25vh;',
+	value: '150,25%'
+}, {
+	style: css_background+'width: 25vw; height: 150vh;',
+	value: '25,150%'
+}, {
+	style: css_background+'width: 125vw; height: 125vh;',
+	value: '125,125%'
 }];
 
 attributeObjectArr.forEach( ({style, value})=>{
@@ -65,7 +72,7 @@ const button_replace = makeElement('input', {
 	value: 'replace',
 	type: 'button'
 });
-const block_style = attributeObjectArr[0].style + 'border: dashed 2px white;' + 'overflow: auto;' + 'color: white;';
+const block_style = attributeObjectArr[1].style + 'overflow: auto;';
 const blockA = makeElement('div', {style: block_style}, 'next');
 const blockB = makeElement('div', {style: block_style}, 'close');
 button_replace.addEventListener('click', (e)=>{
@@ -138,13 +145,9 @@ input_color.addEventListener('input', function(e){
 div_menu.appendChild(input_color);
 
 // Events
-ModalWindow.onopen = (e)=>{
-	console.log('onopen', e);
-	console.log('insertedElement', ModalWindow.insertedElement);
+function listener(e){
+	console.log(e);
 }
-ModalWindow.onreplace = (e)=>{
-	console.log('onreplace', e);
-}
-ModalWindow.onclose = (e)=>{
-	console.log('onclose', e);
-}
+ModalWindow.onopen = listener;
+ModalWindow.onreplace = listener;
+ModalWindow.onclose = listener;
