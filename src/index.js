@@ -262,7 +262,7 @@ const obj = {
                     // 閉じるボタン
                     close();
                 }else if( isCloseOnInsertedElement && (e.target===insertedElement||insertedElement.contains(e.target)) ){
-                    // 設定有効なら挿入した要素とその子孫
+                    // 設定有効なら挿入した要素かその子孫
                     close();
                 }
             }, true);

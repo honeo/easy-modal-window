@@ -1,7 +1,9 @@
 /*
-	test
+	CSS Modules
 */
 
-.hoge {
-	background-color: rgb(228, 164, 143);
+/* bodyサイズをwindowまで縮小 */
+._body {
+	height: 100vm;
+	overflow: hidden;
 }

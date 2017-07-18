@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("@honeo/await-event"), require("make-element"), require("@honeo/type-check"), require("./lib/events.js"), require("style-handle"), require("./lib/body-ctrl"));
+		module.exports = factory(require("@honeo/await-event"), require("make-element"), require("@honeo/type-check"), require("./lib/events.js"), require("./lib/body-ctrl"), require("style-handle"));
 	else if(typeof define === 'function' && define.amd)
-		define(["@honeo/await-event", "make-element", "@honeo/type-check", "./lib/events.js", "style-handle", "./lib/body-ctrl"], factory);
+		define(["@honeo/await-event", "make-element", "@honeo/type-check", "./lib/events.js", "./lib/body-ctrl", "style-handle"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("@honeo/await-event"), require("make-element"), require("@honeo/type-check"), require("./lib/events.js"), require("style-handle"), require("./lib/body-ctrl")) : factory(root["@honeo/await-event"], root["make-element"], root["@honeo/type-check"], root["./lib/events.js"], root["style-handle"], root["./lib/body-ctrl"]);
+		var a = typeof exports === 'object' ? factory(require("@honeo/await-event"), require("make-element"), require("@honeo/type-check"), require("./lib/events.js"), require("./lib/body-ctrl"), require("style-handle")) : factory(root["@honeo/await-event"], root["make-element"], root["@honeo/type-check"], root["./lib/events.js"], root["./lib/body-ctrl"], root["style-handle"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_7__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _events = __webpack_require__(4);
 
-	var _bodyCtrl = __webpack_require__(7);
+	var _bodyCtrl = __webpack_require__(5);
 
 	var _bodyCtrl2 = _interopRequireDefault(_bodyCtrl);
 
@@ -245,7 +245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        // 閉じるボタン
 	                        close();
 	                    } else if (isCloseOnInsertedElement && (e.target === insertedElement || insertedElement.contains(e.target))) {
-	                        // 設定有効なら挿入した要素とその子孫
+	                        // 設定有効なら挿入した要素かその子孫
 	                        close();
 	                    }
 	                }, true);
@@ -511,17 +511,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
 /***/ },
-/* 5 */,
+/* 5 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
+
+/***/ },
 /* 6 */
 /***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_7__;
 
 /***/ }
 /******/ ])

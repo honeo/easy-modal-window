@@ -21,7 +21,7 @@
     "babel-loader": "^6.2.5",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-stage-0": "^6.5.0",
-    "css-loader": "^0.26.0",
+    "css-loader": "^0.26.1",
     "opener": "^1.4.1",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.3",
