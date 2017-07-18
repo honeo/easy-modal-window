@@ -1,46 +1,48 @@
 {
-  "name": "easy-modal-window",
-  "version": "2.2.3",
-  "description": "かんたんモーダルウィンドウ",
-  "main": "bundle.js",
-  "scripts": {
-    "test": "npm update && node build-and-test.js"
-  },
-  "author": "honeo",
-  "license": "MIT",
-  "dependencies": {
-    "@honeo/await-event": "^1.0.3",
-    "@honeo/check": "^1.0.2",
-    "make-element": "^1.4.0",
-    "style-handle": "^1.1.0"
-  },
-  "devDependencies": {
-    "@honeo/web-api-polyfill": "^1.0.1",
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-loader": "^6.4.1",
-    "babel-preset-latest": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "css-loader": "^0.26.4",
-    "opener": "^1.4.3",
-    "style-loader": "^0.13.2",
-    "webpack": "^1.15.0",
-    "webpack-dev-server": "^1.16.5"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/honeo/easy-modal-window.git"
-  },
-  "keywords": [
-    "easy",
-    "modal",
-    "window"
-  ],
-  "bugs": {
-    "url": "https://github.com/honeo/easy-modal-window/issues"
-  },
-  "homepage": "https://github.com/honeo/easy-modal-window#readme"
+	"name": "easy-modal-window",
+	"version": "2.2.3",
+	"description": "かんたんモーダルウィンドウ",
+	"main": "index_bundle.js",
+	"scripts": {
+		"build": "npm update && webpack --config src/webpack.config.js",
+		"test": "npm update && webpack-dev-server --config test/webpack.config.js && opener localhost:8080"
+	},
+	"author": "honeo",
+	"license": "MIT",
+	"dependencies": {
+		"@honeo/await-event": "^1.0.3",
+		"@honeo/check": "^1.0.2",
+		"make-element": "^1.4.0",
+		"style-handle": "^1.1.0"
+	},
+	"devDependencies": {
+		"@honeo/web-api-polyfill": "^1.0.1",
+		"babel-cli": "^6.24.1",
+		"babel-core": "^6.25.0",
+		"babel-loader": "^7.1.1",
+		"babel-preset-env": "^1.6.0",
+		"babel-preset-latest": "^6.24.1",
+		"babel-preset-stage-0": "^6.24.1",
+		"css-loader": "^0.26.4",
+		"opener": "^1.4.3",
+		"style-loader": "^0.13.2",
+		"webpack": "^3.3.0",
+		"webpack-dev-server": "^2.5.1"
+	},
+	"directories": {
+		"test": "test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/honeo/easy-modal-window.git"
+	},
+	"keywords": [
+		"easy",
+		"modal",
+		"window"
+	],
+	"bugs": {
+		"url": "https://github.com/honeo/easy-modal-window/issues"
+	},
+	"homepage": "https://github.com/honeo/easy-modal-window#readme"
 }

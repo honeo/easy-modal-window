@@ -20,13 +20,14 @@
             縦だけscrollに合わせて移動するように弄っても、スクロールバーが表示される場合に被って不格好になる。
 */
 
-// Modules
+// Mod
 import AwaitEvent from '@honeo/await-event';
 import makeElement from 'make-element';
-import {is, not} from '@honeo/type-check';
-import {onOpen, onReplace, onClose} from './lib/events.js';
-import bodyCtrl from './lib/body-ctrl';
+import {is, not, any} from '@honeo/check';
 import StyleHandle from 'style-handle';
+// Lib
+import {onOpen, onReplace, onClose} from './lib/events.js';
+import bodyCtrl from './lib/body-ctrl/index.js';
 
 // Var
 const ModuleName = 'easy-modal-window';
