@@ -3,7 +3,6 @@ import 'babel-polyfill';
 import '@honeo/web-api-polyfill';
 import makeElement from 'make-element';
 import AwaitEvent from '@honeo/await-event';
-import {is, not} from '@honeo/type-check';
 import ModalWindow from '../';
 
 // 設定

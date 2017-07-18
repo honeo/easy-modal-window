@@ -10,22 +10,22 @@
   "license": "MIT",
   "dependencies": {
     "@honeo/await-event": "^1.0.3",
-    "@honeo/type-check": "^2.0.0",
-    "make-element": "^1.1.1",
+    "@honeo/check": "^1.0.2",
+    "make-element": "^1.4.0",
     "style-handle": "^1.1.0"
   },
   "devDependencies": {
     "@honeo/web-api-polyfill": "^1.0.1",
-    "babel-cli": "^6.9.0",
-    "babel-core": "^6.9.1",
-    "babel-loader": "^6.2.5",
-    "babel-preset-latest": "^6.16.0",
-    "babel-preset-stage-0": "^6.5.0",
-    "css-loader": "^0.26.1",
-    "opener": "^1.4.1",
-    "style-loader": "^0.13.1",
-    "webpack": "^1.13.3",
-    "webpack-dev-server": "^1.14.1"
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "css-loader": "^0.26.4",
+    "opener": "^1.4.3",
+    "style-loader": "^0.13.2",
+    "webpack": "^1.15.0",
+    "webpack-dev-server": "^1.16.5"
   },
   "directories": {
     "test": "test"

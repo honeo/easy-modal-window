@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -178,19 +178,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    close: close,
 	    toggle: toggle,
 	    debug: false
-	};
 
-	/*
-	    各要素の入れ物
-	        なければ作って返す
-	    構造
-	        containerElement: Container
-	            space_top: Item
-	            centeringElement: Item
-	                Contents
-	            space_bottom: Item
-	*/
-	var obj = {
+	    /*
+	        各要素の入れ物
+	            なければ作って返す
+	        構造
+	            containerElement: Container
+	                space_top: Item
+	                centeringElement: Item
+	                    Contents
+	                space_bottom: Item
+	    */
+	};var obj = {
 	    // 上部スペースと✕ボタン
 	    get space_top() {
 	        if (!this._space_top) {
@@ -222,36 +221,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // 背景＆flexboxコンテナ、本体要素
 	    get containerElement() {
-	        var _this = this;
-
 	        if (!this._containerElement) {
-	            (function () {
-	                EasyModalWindow.debug && console.log(ModuleName + ': create containerElement');
-	                var div = (0, _makeElement2.default)('div', {
-	                    class: ModuleName + '-container'
-	                });
-	                _this._containerElement = div;
+	            EasyModalWindow.debug && console.log(ModuleName + ': create containerElement');
+	            var div = (0, _makeElement2.default)('div', {
+	                class: ModuleName + '-container'
+	            });
+	            this._containerElement = div;
 
-	                div.append(obj.space_top);
-	                div.append(obj.centeringElement);
-	                div.append(obj.space_bottom);
+	            div.append(obj.space_top);
+	            div.append(obj.centeringElement);
+	            div.append(obj.space_bottom);
 
-	                // 閉じる設定
-	                window.addEventListener('click', function (e) {
-	                    if (isCloseOnBackgroundClick && e.target === div) {
-	                        // 設定有効なら背景クリック時
-	                        close();
-	                    } else if (e.target.className === ModuleName + '-space_top-closeButton') {
-	                        // 閉じるボタン
-	                        close();
-	                    } else if (isCloseOnInsertedElement && (e.target === insertedElement || insertedElement.contains(e.target))) {
-	                        // 設定有効なら挿入した要素かその子孫
-	                        close();
-	                    }
-	                }, true);
-	                // CSS適用
-	                _styleHandle2.default.addText(css_text);
-	            })();
+	            // 閉じる設定
+	            window.addEventListener('click', function (e) {
+	                if (isCloseOnBackgroundClick && e.target === div) {
+	                    // 設定有効なら背景クリック時
+	                    close();
+	                } else if (e.target.className === ModuleName + '-space_top-closeButton') {
+	                    // 閉じるボタン
+	                    close();
+	                } else if (isCloseOnInsertedElement && (e.target === insertedElement || insertedElement.contains(e.target))) {
+	                    // 設定有効なら挿入した要素かその子孫
+	                    close();
+	                }
+	            }, true);
+	            // CSS適用
+	            _styleHandle2.default.addText(css_text);
 	        }
 	        return this._containerElement;
 	    },
@@ -486,43 +481,43 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = EasyModalWindow;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;

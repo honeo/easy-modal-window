@@ -92,9 +92,12 @@ ModalWindow.isOpen; // true
 ```
 
 ### Events
-onopen, onreplace, onclose
+* onopen
+* onreplace
+* onclose
+
 ```js
 ModalWindow.onopen = (evt)=>{
-	evt; // {target: element, timeStamp: number, type: "open"}
+	console.log(evt); // {target: element, timeStamp: number, type: "open"}
 }
 ```
