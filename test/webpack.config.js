@@ -1,9 +1,13 @@
 /*
-
+	モジュール自体をビルドしてからテスト用.jsをビルドしてサーバー立ち上げ
 */
 
 // Mod
 const webpack = require('webpack');
+const opener = require('opener');
+
+// 3秒後にブラウザで開く
+setTimeout(opener, 1000, 'http://localhost:8080/');
 
 module.exports = {
 	entry: './test/index.js',
@@ -11,8 +15,7 @@ module.exports = {
 		contentBase: "./test",
 		hot: true,
 		inline: true,
-		// v3追加分
-	    compress: true,
+	    compress: true, // gzip
 	    port: 8080
 	},
 	output: {
@@ -22,18 +25,20 @@ module.exports = {
 	module: {
 		rules: [{
 			test: /\.js$/,
-			loader: "babel-loader",
-			query: {
-				ignore: [
-					'babel-polyfill',
-					'core-js'
-				],
-				presets: [
-				  	"babel-preset-latest",
-				  	"babel-preset-stage-0"
-				]
-			}
-		}],
+			use: [{
+				loader: "babel-loader",
+				options: {
+					ignore: [
+						'babel-polyfill',
+						'core-js'
+					],
+					presets: [
+				  		"babel-preset-latest",
+				  		"babel-preset-stage-0"
+					]
+				}
+			}]
+		}]
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(), //hotの依存

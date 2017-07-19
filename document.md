@@ -1,11 +1,27 @@
 # document
 という名の作業メモ。
 
-## Error
+```bash
+# build
+$ npm run build
 
-### module不具合
-他のモジュールからWebpackのProvidePluginで読み込むと返り値オブジェクト.defaultにラップされる。
-つまりはbundle.jsに'babel-plugin-add-module-exports'が適用されないっぽい。
+# test, ブラウザ起動
+$ npm t
+```
+
+## TODO
+* style-loaderをバンドルしたくない
+* npm t でビルドと動作確認をまとめて行うようにしたい
+* メソッド同時使用時の処理がごちゃごちゃ
+ * promise-stack使うか。
+* PostCSSによるVP付与＋圧縮
+* Firefoxで閉じる際にコンテンツがチラつく
+ * replaceテストではちらつかない。
+ * やはり背景色だけでなく、コンテナ＋アイテムをまとめて透明アニメーションすべきか。
+* [スクロールバーの幅を考慮したモーダル処理 [JavaScript] | バシャログ。](http://bashalog.c-brains.jp/17/04/10-163000.php)
+ * 参考にする。
+
+## Error
 
 ### 連続open(replace)不具合
 連続openの間にcloseした場合、挿入中の要素への参照がどこかで切れてエラーになる。
@@ -27,5 +43,3 @@ if( !insertedElement ){
 	return Promise.resolve();
 }
 ```
-
-## TODO

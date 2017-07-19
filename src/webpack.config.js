@@ -15,6 +15,7 @@ const path = require('path');
 const {is} = require('@honeo/check');
 
 module.exports = {
+	watch: true,
 	entry: './src/index.js',
 	output: {
 		path: path.resolve(__dirname, '../'),
@@ -27,7 +28,7 @@ module.exports = {
 			/\.\w+$/.test(request),
 			!/node_modules/.test(context)
 		);
-		console.log(`externals: ${isBundle}`, request);
+		console.log(`bundle: ${isBundle}`, request);
 		isBundle ?
 			callback():
 			callback(null, request);
@@ -35,15 +36,32 @@ module.exports = {
 	module: {
 		rules: [{
 			test: /\.js$/,
-			loader: 'babel-loader',
-			query: {
-				ignore: [],
-				presets: [
-				  	'babel-preset-latest',
-				  	'babel-preset-stage-0'
-				],
-				plugins: []
-			}
+			use: [{
+				loader: 'babel-loader',
+				options: {
+					ignore: [],
+					presets: [
+						// tree shaking
+				  		["latest", {
+							es2015: {
+								modules: false
+							}
+						}],
+				  		'stage-0'
+					],
+					plugins: []
+				}
+			}]
+		}, {
+			test: /\.css$/,
+			use: [{
+				loader: 'style-loader'
+			}, {
+				loader: 'css-loader',
+				options: {
+					modules: true
+				}
+			}]
 		}]
 	}
 }

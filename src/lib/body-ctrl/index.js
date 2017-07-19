@@ -10,7 +10,7 @@
 // Modules
 import StyleHandle from 'style-handle';
 import {is, not, any} from '@honeo/check';
-import styles from 'style-loader!css-loader?modules!./style.css';// CSS Modules
+import styles from './style.css';// CSS Modules
 
 // Var
 const doc = document;

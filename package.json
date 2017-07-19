@@ -4,8 +4,8 @@
 	"description": "かんたんモーダルウィンドウ",
 	"main": "index_bundle.js",
 	"scripts": {
-		"build": "npm update && webpack --config src/webpack.config.js",
-		"test": "npm update && webpack-dev-server --config test/webpack.config.js && opener localhost:8080"
+        "build": "npm update && webpack --config src/webpack.config.js",
+		"test": "npm update && webpack-dev-server --config test/webpack.config.js"
 	},
 	"author": "honeo",
 	"license": "MIT",
