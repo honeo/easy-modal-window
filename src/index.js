@@ -245,34 +245,26 @@ async function open(item){
     // モーダルウィンドウ（背景）をフェードイン、挿入要素より遅らせる
     const container_apObj = obj.containerElement.animate([{
         background: 'rgba(0,0,0, 0)',
+        opacity: 0
     }, {
         background: backgroundColor,
+        opacity: 1
     }], {
-        duration: 334,
+        duration: duration_ms*2,
         easing: 'ease-out',
         fill: 'forwards'
     });
 
-    // 中身をフェードイン
-    const item_apObj = item.animate([{
-        opacity: 0,
-    }, {
-        opacity: 1,
-    }], {
-        duration: duration_ms,
-        easing: 'ease-out',
-        fill: 'none'
-    });
-
     // 設定有効時はモーダル以外をボカす
     isBackgroundBlur && bodyCtrl.blur({
-        duration: duration_ms,
+        duration: duration_ms*2,
         selector: `.${obj.containerElement.className}`}
     );
 
-    // アニメーション終了時にresolve
+    // アニメーション終了時にopen発火、resolve
     await new Promise( (resolve, reject)=>{
         container_apObj.onfinish = (e)=>{
+            isOpen = true;
             resolve();
             EasyModalWindow::onOpen({
                 target: item,
@@ -281,7 +273,6 @@ async function open(item){
             });
         }
     });
-    isOpen = true;
 }
 
 /*

@@ -418,7 +418,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 */
 var open = function () {
     var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(item) {
-        var element, dummy, container_apObj, item_apObj;
+        var element, dummy, container_apObj;
         return regeneratorRuntime.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
@@ -480,37 +480,28 @@ var open = function () {
 
                         // モーダルウィンドウ（背景）をフェードイン、挿入要素より遅らせる
                         container_apObj = obj.containerElement.animate([{
-                            background: 'rgba(0,0,0, 0)'
-                        }, {
-                            background: backgroundColor
-                        }], {
-                            duration: 334,
-                            easing: 'ease-out',
-                            fill: 'forwards'
-                        });
-
-                        // 中身をフェードイン
-
-                        item_apObj = item.animate([{
+                            background: 'rgba(0,0,0, 0)',
                             opacity: 0
                         }, {
+                            background: backgroundColor,
                             opacity: 1
                         }], {
-                            duration: duration_ms,
+                            duration: duration_ms * 2,
                             easing: 'ease-out',
-                            fill: 'none'
+                            fill: 'forwards'
                         });
 
                         // 設定有効時はモーダル以外をボカす
 
                         isBackgroundBlur && __WEBPACK_IMPORTED_MODULE_4__lib_body_ctrl_index_js__["a" /* default */].blur({
-                            duration: duration_ms,
+                            duration: duration_ms * 2,
                             selector: '.' + obj.containerElement.className });
 
-                        // アニメーション終了時にresolve
-                        _context.next = 25;
+                        // アニメーション終了時にopen発火、resolve
+                        _context.next = 24;
                         return new Promise(function (resolve, reject) {
                             container_apObj.onfinish = function (e) {
+                                isOpen = true;
                                 resolve();
                                 __WEBPACK_IMPORTED_MODULE_3__lib_events_js__["b" /* onOpen */].call(EasyModalWindow, {
                                     target: item,
@@ -520,10 +511,7 @@ var open = function () {
                             };
                         });
 
-                    case 25:
-                        isOpen = true;
-
-                    case 26:
+                    case 24:
                     case 'end':
                         return _context.stop();
                 }
