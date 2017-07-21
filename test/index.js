@@ -74,18 +74,12 @@ const button_replace = makeElement('input', {
 const block_style = attributeObjectArr[1].style + 'overflow: auto;';
 const blockA = makeElement('div', {style: block_style}, 'next');
 const blockB = makeElement('div', {style: block_style}, 'close');
-button_replace.addEventListener('click', (e)=>{
-	ModalWindow.toggle(blockA).then( _=>{
-		return AwaitEvent(blockA, 'click', false);
-	}).then( _=>{
-		return ModalWindow.open(blockB);
-	}).then( _=>{
-		return AwaitEvent(blockB, 'click', false);
-	}).then( _=>{
-		return ModalWindow.close();
-	}).catch( (error)=>{
-		throw error;
-	});
+button_replace.addEventListener('click', async (e)=>{
+		await ModalWindow.toggle(blockA);
+		await AwaitEvent(blockA, 'click', false);
+		await ModalWindow.open(blockB);
+		await AwaitEvent(blockB, 'click', false);
+	 	await ModalWindow.close();
 }, false);
 
 div_menu.appendChild(button_replace);

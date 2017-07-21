@@ -4,6 +4,7 @@
 
 /* bodyサイズをwindowまで縮小 */
 ._body {
+	height: 100%;
 	height: 100vm;
 	overflow: hidden;
 }

@@ -10,36 +10,29 @@ $ npm t
 ```
 
 ## TODO
-* style-loaderをバンドルしたくない
 * npm t でビルドと動作確認をまとめて行うようにしたい
 * メソッド同時使用時の処理がごちゃごちゃ
- * promise-stack使うか。
+ * promise-stack使うか検討中。
 * PostCSSによるVP付与＋圧縮
-* Firefoxで閉じる際にコンテンツがチラつく
- * replaceテストではちらつかない。
- * やはり背景色だけでなく、コンテナ＋アイテムをまとめて透明アニメーションすべきか。
 * [スクロールバーの幅を考慮したモーダル処理 [JavaScript] | バシャログ。](http://bashalog.c-brains.jp/17/04/10-163000.php)
  * 参考にする。
+* 閉じるボタン
+ * スクロールバー表示の有無に関わらず画面右上から一定位置にしたい。
+ * fixedにして上部スペースに被せても横スクロールに追従しないからイマイチ。
+ * 縦だけscrollに合わせて移動するように弄っても、スクロールバーが表示される場合に被って不格好になる。
+* styleのvh単位がレガシー環境で読めず表示がずれる
 
-## Error
-
-### 連続open(replace)不具合
-連続openの間にcloseした場合、挿入中の要素への参照がどこかで切れてエラーになる。
-以下はv2.2.3のclose関数内でinsertedElementを扱う直前の箇所に入れた応急処置。
-```js
-// 挿入中要素の参照がなければ子要素を全てパージ、画面状態を解除して終了
-if( !insertedElement ){
-	bodyCtrl.focus();
-	isOpen = false;
-	bodyCtrl.view();
-	EasyModalWindow::onClose({
-		target: null,
-		timeStamp: Date.now(),
-		type: 'close'
-	});
-	[...obj.centeringElement.childNodes].forEach( (node)=>{
-		node.remove();
-	});
-	return Promise.resolve();
-}
-```
+## 要件
+### アニメーション
+展開・閉じる際の背景色。
+展開中に後ろの各要素のボカシ。
+展開・閉じる際の挿入した要素の透明度。
+### 中央寄せ
+flexbox実装。
+中身のサイズに合わせてページサイズ（スクロール領域）が変化する。
+中央寄せで上下左右が画面外にはみ出さない。
+外から挿入した要素の外部にレスポンシブなスペースがある。
+	上部には閉じるボタンがあり、最低限そのサイズ分のスペースは保持する。
+### 閉じるボタン
+windowより挿入要素が大きいと背景クリックで閉じられなくなり
+挿入要素内で .close() を呼び出していなかった場合はハマるため。

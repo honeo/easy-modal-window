@@ -4,7 +4,7 @@
 
 .container,
 .space_top,
-.space_top-closeButton,
+.close,
 .centering,
 .space_bottom {
 	margin: 0;
@@ -60,10 +60,10 @@
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
 }
-.space_top-closeButton {
+.close {
 	position: fixed;
-	top: 1vh;
-	right: 1vw;
+	top: 1%; top: 1vh;
+	right: 1%; right: 1vw;
 	padding: 0.3rem;
 	color: white;
 	font-size: 1.6rem;
@@ -77,7 +77,7 @@
 	-moz-transition: 0.3s;
 	transition: 0.3s;
 }
-.space_top-closeButton:hover {
+.close:hover {
 	color: firebrick;
 	transition: 0.3s;
 }

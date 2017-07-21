@@ -52,7 +52,7 @@ module.exports = {
 					plugins: []
 				}
 			}]
-		}, {
+		}, {// css modules
 			test: /\.css$/,
 			use: [{
 				loader: 'style-loader'

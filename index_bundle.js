@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("@honeo/check"), require("@honeo/await-event"), require("make-element"), require("style-handle"));
+		module.exports = factory(require("@honeo/check"), require("@honeo/await-event"), require("style-handle"), require("make-element"));
 	else if(typeof define === 'function' && define.amd)
-		define(["@honeo/check", "@honeo/await-event", "make-element", "style-handle"], factory);
+		define(["@honeo/check", "@honeo/await-event", "style-handle", "make-element"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("@honeo/check"), require("@honeo/await-event"), require("make-element"), require("style-handle")) : factory(root["@honeo/check"], root["@honeo/await-event"], root["make-element"], root["style-handle"]);
+		var a = typeof exports === 'object' ? factory(require("@honeo/check"), require("@honeo/await-event"), require("style-handle"), require("make-element")) : factory(root["@honeo/check"], root["@honeo/await-event"], root["style-handle"], root["make-element"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_8__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_9__, __WEBPACK_EXTERNAL_MODULE_13__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -389,17 +389,63 @@ function updateLink(linkElement, obj) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/*
+	共通で使い回すオブジェクト
+*/
+/* harmony default export */ __webpack_exports__["a"] = ({
+	backgroundColor: 'rgba(0,0,0, 0.72)', // 背景色
+	duration_ms: 160, // アニメーション総時間
+	insertedElement: null, // 外部から挿入中の要素
+	isBackgroundBlur: true, // 展開中に背景をボカすか
+	isCloseOnBackgroundClick: true, // 背景クリックでも閉じるかどうか
+	isCloseOnInsertedElement: false, // 挿入した要素のクリックでも閉じるか
+	isHideScrollbar: true, // 展開中にbodyのスクロールバーを隠すか
+	isOpen: false, // 展開の状態
+	weakmap: new WeakMap() // 挿入した要素:挿入地点メモのダミー要素
+});
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(14);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(2)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../node_modules/css-loader/index.js??ref--1-1!./style.css", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js??ref--1-1!./style.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__honeo_await_event__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__honeo_await_event__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__honeo_await_event___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__honeo_await_event__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_make_element__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_make_element___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_make_element__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__honeo_check__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__honeo_check___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__honeo_check__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_events_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_body_ctrl_index_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__style_css__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__style_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__honeo_check__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__honeo_check___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__honeo_check__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_events_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_body_ctrl_index_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__elements_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__share_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__style_css__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__style_css__);
 
 
 /*
@@ -410,100 +456,82 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         引数
             1: element or "selector"
                 elementならそのまま使う。
-                文字列ならselectorとして扱い検索する。
-                    一致する要素を持つselector文字列でない場合はrejectする。
+                文字列ならselectorとして一致する要素を取得する。
         返り値
             promise
                 展開終了時に解決する。
 */
 var open = function () {
-    var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(item) {
-        var element, dummy, container_apObj;
+    var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(_item) {
+        var item, dummy, container_apObj;
         return regeneratorRuntime.wrap(function _callee$(_context) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        if (!__WEBPACK_IMPORTED_MODULE_2__honeo_check__["is"].str(item)) {
-                            _context.next = 12;
-                            break;
-                        }
+                        // 要素ならそのまま、文字列ならselectorとしてelementを探す
+                        item = __WEBPACK_IMPORTED_MODULE_1__honeo_check__["is"].str(_item) ? doc.querySelector(_item) : _item;
 
-                        element = doc.querySelector(item);
+                        // Validation
 
-                        if (!element) {
-                            _context.next = 9;
-                            break;
-                        }
-
-                        // 対になるダミー要素を作って入れ替え
-                        dummy = obj.dummyElement.cloneNode(true);
-
-                        weakMap.set(element, dummy);
-                        element.replaceWith(dummy);
-                        item = element;
-                        _context.next = 10;
-                        break;
-
-                    case 9:
-                        return _context.abrupt('return', Promise.reject(item + ': not found'));
-
-                    case 10:
-                        _context.next = 14;
-                        break;
-
-                    case 12:
-                        if (!__WEBPACK_IMPORTED_MODULE_2__honeo_check__["not"].element(item)) {
-                            _context.next = 14;
+                        if (!__WEBPACK_IMPORTED_MODULE_1__honeo_check__["not"].element(item)) {
+                            _context.next = 3;
                             break;
                         }
 
                         throw new TypeError('Invalid argument');
 
-                    case 14:
-                        if (!isOpen) {
-                            _context.next = 16;
+                    case 3:
+                        if (!__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isOpen) {
+                            _context.next = 5;
                             break;
                         }
 
                         return _context.abrupt('return', replace(item));
 
-                    case 16:
+                    case 5:
 
-                        body.appendChild(obj.containerElement);
-                        obj.centeringElement.appendChild(item);
+                        body.appendChild(__WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].container);
+                        // 親ノードがあれば位置記憶用のダミーを挿入
+                        if (item.parentNode) {
+                            dummy = __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].dummy;
+
+                            item.after(dummy);
+                            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].weakmap.set(item, dummy);
+                        }
+                        __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].centering.appendChild(item);
 
                         // 挿入中要素メモ
-                        insertedElement = item;
+                        __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement = item;
 
                         // 設定有効時、body要素をheight100%に縮小して非表示部分を隠す
-                        isHideScrollbar && __WEBPACK_IMPORTED_MODULE_4__lib_body_ctrl_index_js__["a" /* default */].hidden();
+                        __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isHideScrollbar && __WEBPACK_IMPORTED_MODULE_3__lib_body_ctrl_index_js__["a" /* default */].hidden();
 
                         // モーダルウィンドウ（背景）をフェードイン、挿入要素より遅らせる
-                        container_apObj = obj.containerElement.animate([{
+                        container_apObj = __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].container.animate([{
                             background: 'rgba(0,0,0, 0)',
                             opacity: 0
                         }, {
-                            background: backgroundColor,
+                            background: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].backgroundColor,
                             opacity: 1
                         }], {
-                            duration: duration_ms * 2,
+                            duration: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].duration_ms * 2,
                             easing: 'ease-out',
                             fill: 'forwards'
                         });
 
                         // 設定有効時はモーダル以外をボカす
 
-                        isBackgroundBlur && __WEBPACK_IMPORTED_MODULE_4__lib_body_ctrl_index_js__["a" /* default */].blur({
-                            duration: duration_ms * 2,
-                            selector: '.' + obj.containerElement.className });
+                        __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isBackgroundBlur && __WEBPACK_IMPORTED_MODULE_3__lib_body_ctrl_index_js__["a" /* default */].blur({
+                            duration: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].duration_ms * 2,
+                            selector: '.' + __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].container.className });
 
                         // アニメーション終了時にopen発火、resolve
-                        _context.next = 24;
+                        _context.next = 14;
                         return new Promise(function (resolve, reject) {
                             container_apObj.onfinish = function (e) {
-                                isOpen = true;
+                                __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isOpen = true;
                                 resolve();
-                                __WEBPACK_IMPORTED_MODULE_3__lib_events_js__["b" /* onOpen */].call(EasyModalWindow, {
+                                __WEBPACK_IMPORTED_MODULE_2__lib_events_js__["b" /* onOpen */].call(EasyModalWindow, {
                                     target: item,
                                     timeStamp: Date.now(),
                                     type: 'open'
@@ -511,7 +539,7 @@ var open = function () {
                             };
                         });
 
-                    case 24:
+                    case 14:
                     case 'end':
                         return _context.stop();
                 }
@@ -528,42 +556,230 @@ var open = function () {
     中身を入れ替える
         旧アイテムをフェードアウト＞新アイテムをフェードイン＞resolve
             OUT,INを両方行うためアニメーション時間はそれぞれ2/3に短縮
-        promiseを返す
         openから呼び出して使う
-            引数チェックはopenでやったから省略
+            引数チェックはopenでやるから省略
+        不具合
+            Firefoxでチラつく
+                挿入中コンテンツを透明化→透過後にremove→新コンテンツ挿入とするとチラチラする。
+                fill:"none"時に、スタイル初期化を描画してからfinishイベントが発火するっぽい。
+                対策としてcenteringを透明化→コンテンツ入れ替え→透明化解除としている。
+
+
+        引数
+            1: element
+        返り値
+            promise
+                入れ替え後に解決する。
 */
 
+
+var replace = function () {
+    var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(item_new) {
+        var apObj1, dummy, apObj2;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+                switch (_context2.prev = _context2.next) {
+                    case 0:
+
+                        // 古いアイテムをフェードアウト
+                        apObj1 = __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].centering.animate([{
+                            opacity: 1
+                        }, {
+                            opacity: 0
+                        }], {
+                            duration: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].duration_ms / 2,
+                            fill: 'forwards'
+                        });
+                        _context2.next = 3;
+                        return __WEBPACK_IMPORTED_MODULE_0__honeo_await_event___default()(apObj1, 'finish', false);
+
+                    case 3:
+
+                        // フェードアウト後にパージ、対になるダミー要素があれば入れ替える
+                        if (__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].weakmap.has(__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement)) {
+                            dummy = __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].weakmap.get(__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement);
+
+                            dummy.replaceWith(__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement);
+                        } else {
+                            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement.remove();
+                        }
+
+                        // 新アイテムを挿入して変数上書きしてフェードイン
+                        __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].centering.appendChild(item_new);
+                        __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement = item_new;
+                        apObj2 = __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].centering.animate([{
+                            opacity: 0
+                        }, {
+                            opacity: 1
+                        }], {
+                            duration: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].duration_ms / 2,
+                            fill: 'forwards'
+                        });
+                        _context2.next = 9;
+                        return __WEBPACK_IMPORTED_MODULE_0__honeo_await_event___default()(apObj2, 'finish', false);
+
+                    case 9:
+
+                        __WEBPACK_IMPORTED_MODULE_2__lib_events_js__["c" /* onReplace */].call(EasyModalWindow, {
+                            target: item_new,
+                            timeStamp: Date.now(),
+                            type: 'replace'
+                        });
+
+                    case 10:
+                    case 'end':
+                        return _context2.stop();
+                }
+            }
+        }, _callee2, this);
+    }));
+
+    return function replace(_x2) {
+        return _ref2.apply(this, arguments);
+    };
+}();
+
+/*
+    展開中なら閉じる
+        展開中ならコンテナ・アイテムのフェードアウトを待ってresolve
+        展開中でなければ即resolve
+        すぐ操作できるように閉じる際は素早く
+
+        引数
+            なし
+        返り値
+            promise
+                閉じた後に解決する。
+
+*/
+
+
+var close = function () {
+    var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
+        var _context4;
+
+        var _context3, container_apObj, dummy;
+
+        return regeneratorRuntime.wrap(function _callee3$(_context5) {
+            while (1) {
+                switch (_context5.prev = _context5.next) {
+                    case 0:
+                        if (__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isOpen) {
+                            _context5.next = 3;
+                            break;
+                        }
+
+                        (_context3 = __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].EasyModalWindow, __WEBPACK_IMPORTED_MODULE_2__lib_events_js__["a" /* onClose */]).call(_context3, {
+                            target: null,
+                            timeStamp: Date.now(),
+                            type: 'close'
+                        });
+                        return _context5.abrupt('return');
+
+                    case 3:
+
+                        // コンテナをフェードアウト
+                        container_apObj = __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].container.animate([{
+                            background: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].backgroundColor,
+                            opacity: 1
+                        }, {
+                            background: 'rgba(0,0,0, 0)',
+                            opacity: 0
+                        }], {
+                            duration: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].duration_ms,
+                            easing: 'ease-in-out',
+                            fill: 'forwards'
+                        });
+
+
+                        __WEBPACK_IMPORTED_MODULE_3__lib_body_ctrl_index_js__["a" /* default */].focus(); // ボカし解除、ボカしてなければ無反応
+                        __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isOpen = false;
+
+                        // フェードアウトが終わればパージしてwindowサイズを戻す
+                        _context5.next = 8;
+                        return __WEBPACK_IMPORTED_MODULE_0__honeo_await_event___default()(container_apObj, 'finish', false);
+
+                    case 8:
+                        __WEBPACK_IMPORTED_MODULE_4__elements_js__["a" /* default */].container.remove();
+
+                        // 展開中の要素をパージ、対になるダミー要素があれば入れ替える
+                        if (__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].weakmap.has(__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement)) {
+                            dummy = __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].weakmap.get(__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement);
+
+                            dummy.replaceWith(__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement);
+                        } else {
+                            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement.remove();
+                        }
+
+                        __WEBPACK_IMPORTED_MODULE_3__lib_body_ctrl_index_js__["a" /* default */].view(); // windowサイズ復元
+                        // closeイベント
+                        (_context4 = __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].EasyModalWindow, __WEBPACK_IMPORTED_MODULE_2__lib_events_js__["a" /* onClose */]).call(_context4, {
+                            target: __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement,
+                            timeStamp: Date.now(),
+                            type: 'close'
+                        });
+                        // 挿入中メモ削除
+                        __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement = null;
+
+                    case 13:
+                    case 'end':
+                        return _context5.stop();
+                }
+            }
+        }, _callee3, this);
+    }));
+
+    return function close() {
+        return _ref3.apply(this, arguments);
+    };
+}();
+
+/*
+    トグル
+
+        引数
+            1...: なんでも
+                そのままclose, openに渡す
+        返り値
+            promise
+*/
+
+
+var toggle = function () {
+    var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+        var _args4 = arguments;
+        return regeneratorRuntime.wrap(function _callee4$(_context6) {
+            while (1) {
+                switch (_context6.prev = _context6.next) {
+                    case 0:
+                        return _context6.abrupt('return', __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isOpen ? close.apply(undefined, _args4) : open.apply(undefined, _args4));
+
+                    case 1:
+                    case 'end':
+                        return _context6.stop();
+                }
+            }
+        }, _callee4, this);
+    }));
+
+    return function toggle() {
+        return _ref4.apply(this, arguments);
+    };
+}();
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 /*
-    要件
-        アニメーション
-            展開・閉じる際の背景色。
-            展開中に後ろの各要素のボカシ。
-            展開・閉じる際の挿入した要素の透明度。
-        中央寄せ
-            flexbox実装。
-            中身のサイズに合わせてページサイズ（スクロール領域）が変化する。
-            中央寄せで上下左右が画面外にはみ出さない。
-            外から挿入した要素の外部にレスポンシブなスペースがある。
-                上部には閉じるボタンがあり、最低限そのサイズ分のスペースは保持する。
-        閉じるボタン
-            windowより挿入要素が大きいと背景クリックで閉じられなくなり
-            挿入要素内で .close() を呼び出していなかった場合はハマるため。
-    TODO:
-        閉じるボタン
-            スクロールバー表示の有無に関わらず画面右上から一定位置にしたい。
-            fixedにして上部スペースに被せても横スクロールに追従しないからイマイチ。
-            縦だけscrollに合わせて移動するように弄っても、スクロールバーが表示される場合に被って不格好になる。
+
 */
 
 // Mod
 
 
+// Local
 
-// Lib
 
+ // 表示用要素
 
 // css modules
 
@@ -572,15 +788,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var doc = document;
 var head = doc.head;
 var body = doc.body;
-var duration_ms = 160; //アニメーション総時間
-var weakMap = new WeakMap(); // selectorから挿入した要素:挿入地点メモのダミー要素
-var isOpen = false; // 展開の状態、同期処理内で早めに切り替える、Promise#resolveのタイミングとは関係ない
-var isBackgroundBlur = true; // 展開中に背景をボカすか
-var isCloseOnBackgroundClick = true; // 背景クリックでも閉じるかどうか
-var isCloseOnInsertedElement = false; // 挿入した要素のクリックでも閉じるか
-var isHideScrollbar = true; // 展開中にbodyのスクロールバーを隠すか
-var insertedElement = void 0; // 外部から挿入中の要素
-var backgroundColor = 'rgba(0,0,0, 0.72)'; // 背景色
 
 /*
     APIの入れ物
@@ -588,283 +795,68 @@ var backgroundColor = 'rgba(0,0,0, 0.72)'; // 背景色
 */
 var EasyModalWindow = {
     get backgroundColor() {
-        return backgroundColor;
+        return __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].backgroundColor;
     },
     set backgroundColor(colortext) {
-        if (__WEBPACK_IMPORTED_MODULE_2__honeo_check__["is"].str(colortext)) {
-            backgroundColor = colortext;
+        if (__WEBPACK_IMPORTED_MODULE_1__honeo_check__["is"].str(colortext)) {
+            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].backgroundColor = colortext;
         }
     },
     get insertedElement() {
-        return insertedElement;
+        return __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].insertedElement;
     },
     get isOpen() {
-        return isOpen;
+        return __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].share.isOpen;
     },
     get isBackgroundBlur() {
-        return isBackgroundBlur;
+        return __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isBackgroundBlur;
     },
     set isBackgroundBlur(arg) {
-        if (__WEBPACK_IMPORTED_MODULE_2__honeo_check__["is"].bool(arg)) {
-            isBackgroundBlur = arg;
+        if (__WEBPACK_IMPORTED_MODULE_1__honeo_check__["is"].bool(arg)) {
+            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isBackgroundBlur = arg;
         }
     },
     get isCloseOnBackgroundClick() {
-        return isCloseOnBackgroundClick;
+        return __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isCloseOnBackgroundClick;
     },
     set isCloseOnBackgroundClick(arg) {
-        if (__WEBPACK_IMPORTED_MODULE_2__honeo_check__["is"].bool(arg)) {
-            isCloseOnBackgroundClick = arg;
+        if (__WEBPACK_IMPORTED_MODULE_1__honeo_check__["is"].bool(arg)) {
+            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isCloseOnBackgroundClick = arg;
         }
     },
     get isCloseOnInsertedElement() {
-        return isCloseOnInsertedElement;
+        return __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isCloseOnInsertedElement;
     },
     set isCloseOnInsertedElement(arg) {
-        if (__WEBPACK_IMPORTED_MODULE_2__honeo_check__["is"].bool(arg)) {
-            isCloseOnInsertedElement = arg;
+        if (__WEBPACK_IMPORTED_MODULE_1__honeo_check__["is"].bool(arg)) {
+            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isCloseOnInsertedElement = arg;
         }
     },
     get isHideScrollbar() {
-        return isHideScrollbar;
+        return __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isHideScrollbar;
     },
     set isHideScrollbar(arg) {
-        if (__WEBPACK_IMPORTED_MODULE_2__honeo_check__["is"].bool(arg)) {
-            isHideScrollbar = arg;
+        if (__WEBPACK_IMPORTED_MODULE_1__honeo_check__["is"].bool(arg)) {
+            __WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].isHideScrollbar = arg;
         }
     },
     open: open,
     close: close,
     toggle: toggle,
     debug: false
-
-    /*
-        各要素の入れ物
-            なければ作って返す
-        構造
-            containerElement: Container
-                space_top: Item
-                centeringElement: Item
-                    Contents
-                space_bottom: Item
-    */
-};var obj = {
-    // 上部スペースと✕ボタン
-    get space_top() {
-        if (!this._space_top) {
-            // 親
-            var div = __WEBPACK_IMPORTED_MODULE_1_make_element___default()('div', {
-                class: __WEBPACK_IMPORTED_MODULE_5__style_css___default.a.space_top
-            });
-            // 子、ボタン代わり
-            var div_closeButton = __WEBPACK_IMPORTED_MODULE_1_make_element___default()('div', '✕', {
-                class: __WEBPACK_IMPORTED_MODULE_5__style_css___default.a["space_top-closeButton"]
-            });
-            div.appendChild(div_closeButton);
-            this._space_top = div;
-        }
-        return this._space_top;
-    },
-
-    // 下部スペース
-    get space_bottom() {
-        if (!this._space_bottom) {
-            // 親
-            var div = __WEBPACK_IMPORTED_MODULE_1_make_element___default()('div', {
-                class: __WEBPACK_IMPORTED_MODULE_5__style_css___default.a.space_bottom
-            });
-            this._space_bottom = div;
-        }
-        return this._space_bottom;
-    },
-
-    // 背景＆flexboxコンテナ、本体要素
-    get containerElement() {
-        if (!this._containerElement) {
-            EasyModalWindow.debug && console.log('EasyModalWindow: create containerElement');
-            var div = __WEBPACK_IMPORTED_MODULE_1_make_element___default()('div', {
-                class: __WEBPACK_IMPORTED_MODULE_5__style_css___default.a.container
-            });
-            this._containerElement = div;
-
-            div.append(obj.space_top);
-            div.append(obj.centeringElement);
-            div.append(obj.space_bottom);
-
-            // 閉じる設定
-            window.addEventListener('click', function (e) {
-                if (isCloseOnBackgroundClick && e.target === div) {
-                    // 設定有効なら背景クリック時
-                    close();
-                } else if (e.target.className === __WEBPACK_IMPORTED_MODULE_5__style_css___default.a["space_top-closeButton"]) {
-                    // 閉じるボタン
-                    close();
-                } else if (isCloseOnInsertedElement && (e.target === insertedElement || insertedElement.contains(e.target))) {
-                    // 設定有効なら挿入した要素かその子孫
-                    close();
-                }
-            }, true);
-            // CSS適用
-        }
-        return this._containerElement;
-    },
-
-    // flexboxアイテム、中央寄せ用
-    get centeringElement() {
-        if (!this._centeringElement) {
-            var div = __WEBPACK_IMPORTED_MODULE_1_make_element___default()('div', {
-                class: __WEBPACK_IMPORTED_MODULE_5__style_css___default.a.centering
-            });
-            this._centeringElement = div;
-        }
-        return this._centeringElement;
-    },
-
-    // selectorから挿入した要素と入れ替えで置いておくやつ
-    get dummyElement() {
-        if (!this._dummyElement) {
-            this._dummyElement = __WEBPACK_IMPORTED_MODULE_1_make_element___default()('span', {
-                class: __WEBPACK_IMPORTED_MODULE_5__style_css___default.a.dummy,
-                style: 'display: none;'
-            });
-        }
-        return this._dummyElement;
-    }
-};function replace(item_new) {
-    return new Promise(function (resolve, reject) {
-        // 古いアイテムをフェードアウト
-        var apObj_old = insertedElement.animate([{
-            opacity: 1
-        }, {
-            opacity: 0
-        }], {
-            duration: duration_ms / 1.5,
-            fill: 'forwards'
-        }).onfinish = resolve;
-    }).then(function (e) {
-        // フェードアウト後にパージ、selectorなら対になるダミー要素があるから入れ替える
-        if (weakMap.has(insertedElement)) {
-            var dummy = weakMap.get(insertedElement);
-            dummy.replaceWith(insertedElement);
-        } else {
-            insertedElement.remove();
-        }
-
-        // 新アイテムを挿入して変数上書きしてフェードイン
-        obj.centeringElement.appendChild(item_new);
-        insertedElement = item_new;
-        var item_apObj = item_new.animate([{
-            opacity: 0
-        }, {
-            opacity: 1
-        }], {
-            duration: duration_ms / 1.5,
-            fill: 'forwards'
-        });
-        return __WEBPACK_IMPORTED_MODULE_0__honeo_await_event___default()(item_apObj, 'finish', false);
-    }).then(function (e) {
-        __WEBPACK_IMPORTED_MODULE_3__lib_events_js__["c" /* onReplace */].call(EasyModalWindow, {
-            target: item_new,
-            timeStamp: Date.now(),
-            type: 'replace'
-        });
-    });
-}
-
-/*
-    展開中なら閉じる
-        promiseを返す
-        展開中ならコンテナ・アイテムのフェードアウトを待ってresolve
-        展開中でなければ即resolve
-        すぐ操作できるように閉じる際は素早く
-*/
-function close() {
-    if (!isOpen) {
-        __WEBPACK_IMPORTED_MODULE_3__lib_events_js__["a" /* onClose */].call(EasyModalWindow, {
-            target: null,
-            timeStamp: Date.now(),
-            type: 'close'
-        });
-        return Promise.resolve();
-    }
-
-    // コンテナをフェードアウト
-    var container_apObj = obj.containerElement.animate([{
-        background: backgroundColor
-    }, {
-        background: 'rgba(0,0,0, 0)'
-    }], {
-        duration: duration_ms,
-        easing: 'ease-in-out',
-        fill: 'forwards'
-    });
-    var container_promise = __WEBPACK_IMPORTED_MODULE_0__honeo_await_event___default()(container_apObj, 'finish', false);
-
-    // // アイテムをフェードアウト
-    // const insertedElement_apObj = insertedElement.animate([{
-    //     opacity: 1
-    // }, {
-    //     opacity: 0
-    // }], {
-    //     duration: duration_ms,
-    //     fill: 'none'
-    // });
-    // const insertedElement_promise = AwaitEvent(insertedElement_apObj, 'finish', false);
-
-    __WEBPACK_IMPORTED_MODULE_4__lib_body_ctrl_index_js__["a" /* default */].focus(); // ボカし解除、ボカしてなければ無反応
-    isOpen = false;
-
-    // 両フェードアウトが終わればパージしてwindowサイズを戻してresolve
-    return Promise.all([container_promise
-    //,insertedElement_promise
-    ]).then(function (evtArr) {
-
-        obj.containerElement.remove();
-
-        // パージ、selectorなら対になるダミー要素があるから入れ替える
-        if (weakMap.has(insertedElement)) {
-            var dummy = weakMap.get(insertedElement);
-            dummy.replaceWith(insertedElement);
-        } else {
-            insertedElement.remove();
-        }
-
-        __WEBPACK_IMPORTED_MODULE_4__lib_body_ctrl_index_js__["a" /* default */].view(); // windowサイズ復元
-        // closeイベント
-        __WEBPACK_IMPORTED_MODULE_3__lib_events_js__["a" /* onClose */].call(EasyModalWindow, {
-            target: insertedElement,
-            timeStamp: Date.now(),
-            type: 'close'
-        });
-        // 挿入中メモ削除
-        insertedElement = null;
-    });
-}
-
-/*
-    トグル
-        promiseを返す
-*/
-function toggle(element) {
-    return isOpen ? close() : open(element);
-}
+};
+__WEBPACK_IMPORTED_MODULE_5__share_js__["a" /* default */].EasyModalWindow = EasyModalWindow;
 
 /* harmony default export */ __webpack_exports__["default"] = (EasyModalWindow);
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_5__;
-
-/***/ }),
 /* 6 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
+
+/***/ }),
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -897,15 +889,15 @@ function onClose(e) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_style_handle__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_style_handle__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_style_handle___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_style_handle__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__honeo_check__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__honeo_check___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__honeo_check__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_css__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_css__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__style_css__);
 /*
     bodyに対してあれこれ
@@ -995,19 +987,19 @@ function focus() {
 });
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_8__;
+module.exports = __WEBPACK_EXTERNAL_MODULE_9__;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(11);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(2)(content, {});
@@ -1027,7 +1019,7 @@ if(false) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1035,7 +1027,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "/*\r\n\tCSS Modules\r\n*/\r\n\r\n/* bodyサイズをwindowまで縮小 */\r\n._2aur7e_TbRIQ1jgJAPW9gn {\r\n\theight: 100vm;\r\n\toverflow: hidden;\r\n}\r\n", ""]);
+exports.push([module.i, "/*\r\n\tCSS Modules\r\n*/\r\n\r\n/* bodyサイズをwindowまで縮小 */\r\n._2aur7e_TbRIQ1jgJAPW9gn {\r\n\theight: 100%;\r\n\theight: 100vm;\r\n\toverflow: hidden;\r\n}\r\n", ""]);
 
 // exports
 exports.locals = {
@@ -1043,33 +1035,135 @@ exports.locals = {
 };
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_make_element__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_make_element___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_make_element__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__honeo_check__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__honeo_check___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__honeo_check__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__share_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_css__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__style_css__);
+/*
+    各要素への参照を持つオブジェクト
+        参照時に要素がなければ作る
 
-// load the styles
-var content = __webpack_require__(12);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(2)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js??ref--1-1!./style.css", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js??ref--1-1!./style.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
+    構造
+        <container> FlexContainer
+		    <space_top> FlexItem
+            <centering> FlexItem
+				Contents
+            <space_bottom> FlexItem
+*/
+
+// Mod
+
+
+// Local
+
+// css modules
+
+
+var elements = {
+
+    // ✕ボタン
+    get close() {
+        if (!this._close) {
+            this._close = __WEBPACK_IMPORTED_MODULE_0_make_element___default()('div', '✕', {
+                class: __WEBPACK_IMPORTED_MODULE_3__style_css___default.a.close
+            });
+        }
+        return this._close;
+    },
+
+    // 上部スペース、✕ボタンが入る
+    get space_top() {
+        if (!this._space_top) {
+            // 親
+            var div = __WEBPACK_IMPORTED_MODULE_0_make_element___default()('div', {
+                class: __WEBPACK_IMPORTED_MODULE_3__style_css___default.a.space_top
+            });
+            // ✕ボタンをIN
+            div.append(this.close);
+            this._space_top = div;
+        }
+        return this._space_top;
+    },
+
+    // 下部スペース
+    get space_bottom() {
+        if (!this._space_bottom) {
+            // 親
+            var div = __WEBPACK_IMPORTED_MODULE_0_make_element___default()('div', {
+                class: __WEBPACK_IMPORTED_MODULE_3__style_css___default.a.space_bottom
+            });
+            this._space_bottom = div;
+        }
+        return this._space_bottom;
+    },
+
+    // 背景＆flexboxコンテナ、本体要素
+    get container() {
+        var _this = this;
+
+        if (!this._container) {
+            var div = __WEBPACK_IMPORTED_MODULE_0_make_element___default()('div', {
+                class: __WEBPACK_IMPORTED_MODULE_3__style_css___default.a.container
+            });
+            this._container = div;
+
+            div.append(elements.space_top, elements.centering, elements.space_bottom);
+
+            window.addEventListener('click', function (e) {
+                // 何れかの条件と一致で閉じる
+                __WEBPACK_IMPORTED_MODULE_1__honeo_check__["any"].true(
+                // 設定有効なら背景クリック時
+                __WEBPACK_IMPORTED_MODULE_2__share_js__["a" /* default */].isCloseOnBackgroundClick && e.target === div,
+                // 閉じるボタン
+                e.target === _this.close,
+                // 設定有効なら挿入した要素かその子孫
+                __WEBPACK_IMPORTED_MODULE_2__share_js__["a" /* default */].isCloseOnInsertedElement && (e.target === __WEBPACK_IMPORTED_MODULE_2__share_js__["a" /* default */].insertedElement || __WEBPACK_IMPORTED_MODULE_2__share_js__["a" /* default */].insertedElement.contains(e.target))) && __WEBPACK_IMPORTED_MODULE_2__share_js__["a" /* default */].EasyModalWindow.close();
+            }, true);
+            // CSS適用
+        }
+        return this._container;
+    },
+
+    // flexboxアイテム、中央寄せ用
+    get centering() {
+        if (!this._centering) {
+            var div = __WEBPACK_IMPORTED_MODULE_0_make_element___default()('div', {
+                class: __WEBPACK_IMPORTED_MODULE_3__style_css___default.a.centering
+            });
+            this._centering = div;
+        }
+        return this._centering;
+    },
+
+    // 挿入した要素と入れ替えで置いておくやつ
+    get dummy() {
+        if (!this._dummy) {
+            this._dummy = __WEBPACK_IMPORTED_MODULE_0_make_element___default()('span', {
+                class: __WEBPACK_IMPORTED_MODULE_3__style_css___default.a.dummy,
+                style: 'display: none;'
+            });
+        }
+        return this._dummy;
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (elements);
 
 /***/ }),
-/* 12 */
+/* 13 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_13__;
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1077,13 +1171,13 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "/*\r\n\tDOM構造順\r\n*/\r\n\r\n.Kj81HFlmcCeAV0rvkpU13,\r\n._1aiuL62n-Dh9D22PoJk7Fs,\r\n.hDl5AVWXV0FN-takUPIWT,\r\n._1hb7ExsIALuP1olhfjTOT9,\r\n.UBR9LUvtO4Tlejrq4rDtG {\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\t-webkit-box-sizing: border-box;\r\n\t-moz-box-sizing: border-box;\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.Kj81HFlmcCeAV0rvkpU13 {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: -webkit-flex;\r\n\tdisplay: -moz-box;\r\n\tdisplay: -ms-flexbox;\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: vertical;\r\n\t-webkit-box-direction: normal;\r\n\t-webkit-flex-direction: column;\r\n\t-moz-box-orient: vertical;\r\n\t-moz-box-direction: normal;\r\n\t-ms-flex-direction: column;\r\n\tflex-direction: column;\r\n\t-webkit-box-pack: justify;\r\n\t-webkit-justify-content: space-between;\r\n\t-moz-box-pack: justify;\r\n\t-ms-flex-pack: justify;\r\n\tjustify-content: space-between;\r\n\t-webkit-box-align: center;\r\n\t-webkit-align-items: center;\r\n\t-moz-box-align: center;\r\n\t-ms-flex-align: center;\r\n\talign-items: center;\r\n\t-webkit-flex-shrink: 0;\r\n\t-ms-flex-negative: 0;\r\n\tflex-shrink: 0;\r\n\tposition: fixed;\r\n\ttop: 0;\r\n\tbottom: 0;\r\n\tleft: 0;\r\n\tright: 0;\r\n\toverflow: auto;\r\n\tz-index: 1000;\r\n}\r\n\r\n._1aiuL62n-Dh9D22PoJk7Fs {\r\n\t/* min-height: 2.2rem; */\r\n\t-webkit-box-flex: 50;\r\n\t-webkit-flex-grow: 50;\r\n\t-moz-box-flex: 50;\r\n\t-ms-flex-positive: 50;\r\n\tflex-grow: 50;\r\n\t-webkit-flex-shrink: 0;\r\n\t-ms-flex-negative: 0;\r\n\tflex-shrink: 0;\r\n}\r\n.hDl5AVWXV0FN-takUPIWT {\r\n\tposition: fixed;\r\n\ttop: 1vh;\r\n\tright: 1vw;\r\n\tpadding: 0.3rem;\r\n\tcolor: white;\r\n\tfont-size: 1.6rem;\r\n\tcursor: default;\r\n\t-webkit-user-select: none;\r\n\t-moz-user-select: none;\r\n\t-ms-user-select: none;\r\n\tuser-select: none;\r\n\t-webkit-transition: 0.3s;\r\n\t-o-transition: 0.3s;\r\n\t-moz-transition: 0.3s;\r\n\ttransition: 0.3s;\r\n}\r\n.hDl5AVWXV0FN-takUPIWT:hover {\r\n\tcolor: firebrick;\r\n\ttransition: 0.3s;\r\n}\r\n\r\n._1hb7ExsIALuP1olhfjTOT9 {\r\n\tmax-width: 100%;\r\n\t/* max-height: 100%; */\r\n\tflex-shrink: 0;\r\n}\r\n\r\n.UBR9LUvtO4Tlejrq4rDtG {\r\n\t-webkit-box-flex: 50;\r\n\t-webkit-flex-grow: 50;\r\n\t-moz-box-flex: 50;\r\n\t-ms-flex-positive: 50;\r\n\tflex-grow: 50;\r\n}\r\n", ""]);
+exports.push([module.i, "/*\r\n\tDOM構造順\r\n*/\r\n\r\n.Kj81HFlmcCeAV0rvkpU13,\r\n._1aiuL62n-Dh9D22PoJk7Fs,\r\n.ZJSTons1k_f_oN--cGZob,\r\n._1hb7ExsIALuP1olhfjTOT9,\r\n.UBR9LUvtO4Tlejrq4rDtG {\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\t-webkit-box-sizing: border-box;\r\n\t-moz-box-sizing: border-box;\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.Kj81HFlmcCeAV0rvkpU13 {\r\n\tdisplay: -webkit-box;\r\n\tdisplay: -webkit-flex;\r\n\tdisplay: -moz-box;\r\n\tdisplay: -ms-flexbox;\r\n\tdisplay: flex;\r\n\t-webkit-box-orient: vertical;\r\n\t-webkit-box-direction: normal;\r\n\t-webkit-flex-direction: column;\r\n\t-moz-box-orient: vertical;\r\n\t-moz-box-direction: normal;\r\n\t-ms-flex-direction: column;\r\n\tflex-direction: column;\r\n\t-webkit-box-pack: justify;\r\n\t-webkit-justify-content: space-between;\r\n\t-moz-box-pack: justify;\r\n\t-ms-flex-pack: justify;\r\n\tjustify-content: space-between;\r\n\t-webkit-box-align: center;\r\n\t-webkit-align-items: center;\r\n\t-moz-box-align: center;\r\n\t-ms-flex-align: center;\r\n\talign-items: center;\r\n\t-webkit-flex-shrink: 0;\r\n\t-ms-flex-negative: 0;\r\n\tflex-shrink: 0;\r\n\tposition: fixed;\r\n\ttop: 0;\r\n\tbottom: 0;\r\n\tleft: 0;\r\n\tright: 0;\r\n\toverflow: auto;\r\n\tz-index: 1000;\r\n}\r\n\r\n._1aiuL62n-Dh9D22PoJk7Fs {\r\n\t/* min-height: 2.2rem; */\r\n\t-webkit-box-flex: 50;\r\n\t-webkit-flex-grow: 50;\r\n\t-moz-box-flex: 50;\r\n\t-ms-flex-positive: 50;\r\n\tflex-grow: 50;\r\n\t-webkit-flex-shrink: 0;\r\n\t-ms-flex-negative: 0;\r\n\tflex-shrink: 0;\r\n}\r\n.ZJSTons1k_f_oN--cGZob {\r\n\tposition: fixed;\r\n\ttop: 1%; top: 1vh;\r\n\tright: 1%; right: 1vw;\r\n\tpadding: 0.3rem;\r\n\tcolor: white;\r\n\tfont-size: 1.6rem;\r\n\tcursor: default;\r\n\t-webkit-user-select: none;\r\n\t-moz-user-select: none;\r\n\t-ms-user-select: none;\r\n\tuser-select: none;\r\n\t-webkit-transition: 0.3s;\r\n\t-o-transition: 0.3s;\r\n\t-moz-transition: 0.3s;\r\n\ttransition: 0.3s;\r\n}\r\n.ZJSTons1k_f_oN--cGZob:hover {\r\n\tcolor: firebrick;\r\n\ttransition: 0.3s;\r\n}\r\n\r\n._1hb7ExsIALuP1olhfjTOT9 {\r\n\tmax-width: 100%;\r\n\t/* max-height: 100%; */\r\n\tflex-shrink: 0;\r\n}\r\n\r\n.UBR9LUvtO4Tlejrq4rDtG {\r\n\t-webkit-box-flex: 50;\r\n\t-webkit-flex-grow: 50;\r\n\t-moz-box-flex: 50;\r\n\t-ms-flex-positive: 50;\r\n\tflex-grow: 50;\r\n}\r\n", ""]);
 
 // exports
 exports.locals = {
 	"container": "Kj81HFlmcCeAV0rvkpU13",
 	"space_top": "_1aiuL62n-Dh9D22PoJk7Fs",
-	"space_top-closeButton": "hDl5AVWXV0FN-takUPIWT",
+	"close": "ZJSTons1k_f_oN--cGZob",
 	"centering": "_1hb7ExsIALuP1olhfjTOT9",
 	"space_bottom": "UBR9LUvtO4Tlejrq4rDtG"
 };
