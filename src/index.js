@@ -7,7 +7,7 @@ import AwaitEvent from '@honeo/await-event';
 import {is, not, any} from '@honeo/check';
 // Local
 import {onOpen, onReplace, onClose} from './events.js';
-import bodyCtrl from './lib/body-ctrl/index.js';
+import bodyCtrl from './body-ctrl/index.js';
 import elements from './elements.js'; // 表示用要素
 import share from './share.js';
 // css modules
@@ -112,12 +112,7 @@ async function open(_item){
     share.insertedElement = item;
 
     // body要素をheight100%に縮小して非表示部分を隠す。
-    // 消えたスクロールバー分のwidthを計算し、bodyに同サイズのpadding-rightを付与。
-    const body_clientWidth_before = body.clientWidth;
     bodyCtrl.hidden();
-    const body_clientWidth_after = body.clientWidth;
-    console.log('差: ', body_clientWidth_after - body_clientWidth_before);
-    console.log('padding-reft', typeof body.style.paddingRight);
 
     // モーダルウィンドウ（背景）をフェードイン、挿入要素より遅らせる
     const container_apObj = elements.container.animate([{

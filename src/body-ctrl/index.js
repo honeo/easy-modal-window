@@ -1,8 +1,12 @@
 /*
     bodyに対してあれこれ
         全て自身を返す
+
         bodyサイズを変更・解除
-            body要素をheight100%に縮小して非表示部分を隠す
+            body要素をheight100%に縮小して非表示部分を隠す。
+            その際に以下を参考にbody.style.paddingRightを操作してガタ付きの発生を抑える。
+            * [スクロールバーの幅を考慮したモーダル処理 [JavaScript] | バシャログ。](http://bashalog.c-brains.jp/17/04/10-163000.php)
+
         全ての要素をボカす
             引数オブジェクトで除外するselectorとアニメーション秒数を指定する。
 */
@@ -15,19 +19,24 @@ import styles from './style.css';// CSS Modules
 // Var
 const doc = document;
 const body = doc.body;
-const debug = false;
+let temp_cssText; // ボカす際に使ったテキストのキャッシュ
+let	paddingRight_before = ''; // 元のbody.style.paddingRightの値
+
 
 // bodyサイズをwindow100%に縮小
 function hidden(){
-    debug && console.log('hidden');
-    body.classList.add(styles._body);
+    const body_clientWidth_before = body.clientWidth;
+    body.classList.add(styles._body); // 前後で消えたスクロールバー分のwidthを計算し、bodyに同サイズのpadding-rightを付与。
+    const body_clientWidth_after = body.clientWidth;
+    paddingRight_before = body.style.paddingRight;
+    body.style.paddingRight = `${body_clientWidth_after - body_clientWidth_before}px`;
     return this;
 }
 
 // bodyサイズの縮小を解除
 function view(){
-    debug && console.log('view');
     body.classList.remove(styles._body);
+    body.style.paddingRight = paddingRight_before;
     return this;
 }
 
@@ -104,7 +113,6 @@ function createBlurAnimationStyleText({blur='1px', duration=160, selector=''}){
     `;
 }
 
-let temp_cssText; // ボカす際に使ったテキストのキャッシュ
 
 /*
     ボカす

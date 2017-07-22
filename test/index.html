@@ -12,6 +12,12 @@
             border: 1px solid;
         }
 
+        #foobar {
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
+
         #hoge {
             position: absolute;
             bottom: 0%;
@@ -32,9 +38,11 @@
 </head>
 <body>
     <div id="menu"></div>
-    <div id="piyo">☆(ゝω･)v ｲｪｰｲ</div>
-    <div id="hoge">☆(ゝω･)v ｷｬﾋﾟ</div>
-    <div id="fuga">☆(ゝω･)v ﾜｵｰ</div>
+    <div id="foobar">
+        <span id="piyo">☆(ゝω･)v ｲｪｰｲ</span>
+        <span id="hoge">☆(ゝω･)v ｷｬﾋﾟ</span>
+        <span id="fuga">☆(ゝω･)v ﾜｵｰ</span>
+    </div>
     <script src="bundle_index.js" defer></script>
     <script src="http://localhost:8080/webpack-dev-server.js" defer></script>
 </body>
