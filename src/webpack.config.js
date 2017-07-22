@@ -3,7 +3,7 @@
 
 		依存モジュールはバンドルしない
 			このモジュールを扱う他ビルドツールで重複カット等を利用できるようにするため。
-			要するに/src以下のビルド関連以外のファイルとstyle,css-loaderだけバンドルする。
+			要するに .css, /src以下のビルド関連以外の.js, style,css-loaderだけバンドルする。
 
 		注意
 			このファイルのあるディレクトリが__dirnameになる。
@@ -12,7 +12,8 @@
 
 // Mod
 const path = require('path');
-const {is} = require('@honeo/check');
+const webpack = require('webpack')
+const {is, not, any} = require('@honeo/check');
 
 module.exports = {
 	watch: true,
@@ -59,9 +60,15 @@ module.exports = {
 			}, {
 				loader: 'css-loader',
 				options: {
+					importLoaders: 1, // postcssとの衝突回避？
 					modules: true
 				}
+			}, {
+				loader: 'postcss-loader'
 			}]
 		}]
 	}
+	// plugins: [
+	// 	new webpack.optimize.UglifyJsPlugin()
+	// ]
 }

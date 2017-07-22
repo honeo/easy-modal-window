@@ -4,7 +4,7 @@
 	"description": "かんたんモーダルウィンドウ",
 	"main": "index_bundle.js",
 	"scripts": {
-        "build": "npm update && webpack --config src/webpack.config.js",
+		"build": "npm update && webpack --config src/webpack.config.js",
 		"test": "npm update && webpack-dev-server --config test/webpack.config.js"
 	},
 	"author": "honeo",
@@ -17,6 +17,7 @@
 	},
 	"devDependencies": {
 		"@honeo/web-api-polyfill": "^1.0.1",
+		"autoprefixer": "^7.1.2",
 		"babel-cli": "^6.24.1",
 		"babel-core": "^6.25.0",
 		"babel-loader": "^7.1.1",
@@ -25,6 +26,8 @@
 		"babel-preset-stage-0": "^6.24.1",
 		"css-loader": "^0.26.4",
 		"opener": "^1.4.3",
+		"postcss-cssnext": "^3.0.2",
+		"postcss-loader": "^2.0.6",
 		"style-loader": "^0.13.2",
 		"webpack": "^3.3.0",
 		"webpack-dev-server": "^2.5.1"

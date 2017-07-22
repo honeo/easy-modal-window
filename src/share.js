@@ -8,7 +8,6 @@ export default {
 	isBackgroundBlur: true, // 展開中に背景をボカすか
 	isCloseOnBackgroundClick: true, // 背景クリックでも閉じるかどうか
 	isCloseOnInsertedElement: false, // 挿入した要素のクリックでも閉じるか
-	isHideScrollbar: true, // 展開中にbodyのスクロールバーを隠すか
 	isOpen: false, // 展開の状態
 	weakmap: new WeakMap() // 挿入した要素:挿入地点メモのダミー要素
 }
