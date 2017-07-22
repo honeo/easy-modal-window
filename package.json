@@ -1,6 +1,6 @@
 {
 	"name": "easy-modal-window",
-	"version": "2.2.3",
+	"version": "3.0.0",
 	"description": "かんたんモーダルウィンドウ",
 	"main": "index_bundle.js",
 	"scripts": {
